@@ -1,21 +1,38 @@
 <?xml version="1.0"?>
 <launch>
+    <arg name="sim" default="false"/>
+    <arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>
+    <arg name="model" default="$(find eg_navigation)/robots/naviton_2d.urdf.xacro" />
 
+    <!--gazebo-->
+    <group if="$(arg sim)">
+        <include file="$(find eg_navigation)/launch/include/sim.launch" >
+            <arg name="world_name" value="$(arg world_name)"/>
+        </include>
+        <include file="$(find eg_navigation)/launch/include/sensor_sim.launch" />
+    </group>
+    <!--model show-->
+    <include file="$(find eg_navigation)/launch/include/model_show.launch" >
+        <arg name="include" value="true"/>
+        <arg name="model" default="$(arg model)" />
+    </include>
+    <!--slam packages-->
     <include file="$(find eg_navigation)/launch/include/slam_2d.launch">
         <arg name="nav_mode" default="mapping"/>
         <arg name="move_base" default="false"/>
     </include>
-
-    <!--joystick-->
-    <node name="joystickPS4" pkg="eg_navigation" type="joystickPS4">
-        <remap from="cmd_vel" to="ps4/cmd_vel"/>
-        <param name="control_rate" value="1.0"/>
-    </node>
+    <!--joy stick-->
     <node name="joy_node" pkg="joy" type="joy_node"/>
+    <node name="joystickPS4" pkg="eg_mixed" type="joystickPS4">
+        <param name="control_rate" value="1.0"/>
+        <group if="$(arg sim)">
+            <remap from="cmd_vel" to="diff_drive_controller/cmd_vel"/>
+        </group>
+    </node>
 
     <!--safety function-->
-    <node pkg="eg_navigation" name="laser2pc" type="laser2pc"/>
-    <node pkg="eg_navigation" name="safety_limit" type="safety_limit" output="screen">
+    <node pkg="eg_mixed" name="laser2pc" type="laser2pc"/>
+    <node pkg="eg_safety" name="safety_limit" type="safety_limit" output="screen">
         <param name="max_nn" value="100"/>
         <param name="robot_radius" value="0.6"/>
         <param name="x_max" value="3.0"/>
@@ -27,13 +44,16 @@
         <param name="recovery_start_time" value="0.5"/>
 
         <remap from="safety_limit/cmd_vel_in" to="ps4/cmd_vel"/>
-        <remap from="safety_limit/cmd_vel_out" to="cmd_vel"/>
-        
-
-     </node>
+        <group if="$(arg sim)">
+            <remap from="safety_limit/cmd_vel_out" to="diff_drive_controller/cmd_vel"/>
+        </group>
+        <group unless="$(arg sim)">
+            <remap from="safety_limit/cmd_vel_out" to="cmd_vel"/>
+        </group>
+    </node>
 
     <!--rviz-->
-    <arg name="rvizconfig" default="$(find tvc_navigation)/rviz/mapping.rviz" />
+    <arg name="rvizconfig" default="$(find eg_navigation)/rviz/mapping.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" respawn="true" />
-    
+
 </launch>

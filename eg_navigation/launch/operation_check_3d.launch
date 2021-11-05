@@ -2,31 +2,27 @@
     <arg name="rviz" default="true"/>
     <arg name="sim" default="false"/>
     <arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>
+    <arg name="model" default="$(find eg_navigation)/robots/naviton_3d.urdf.xacro" />
 
     <group if="$(arg sim)">
-        <arg name="ini_x_pos" default= "0.0"/>
-        <arg name="ini_y_pos" default= "0.0"/>
-        <arg name="ini_z_pos" default= "0.0"/>
-        <arg name="ini_yaw"   default= "0.0"/>
-
-        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <include file="$(find eg_navigation)/launch/include/sim.launch" >
             <arg name="world_name" value="$(arg world_name)"/>
-            <arg name="paused" value="false"/>
-            <arg name="use_sim_time" value="true"/>
-            <arg name="gui" value="false"/>
-            <arg name="headless" value="false"/>
-            <arg name="debug" value="false"/>
         </include>
-        <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model roomba -x $(arg ini_x_pos) -y $(arg ini_y_pos) -z $(arg ini_z_pos) -Y $(arg ini_yaw)" />
     </group>
 
     <!--joystick -> cmd_vel-->
     <node name="joy_node" pkg="joy" type="joy_node"/>
-    <node name="joystickPS4" pkg="eg_navigation" type="joystickPS4"/>
+    <node name="joystickPS4" pkg="eg_mixed" type="joystickPS4">
+        <param name="control_rate" value="1.0"/>
+        <group if="$(arg sim)">
+            <remap from="cmd_vel" to="diff_drive_controller/cmd_vel"/>
+        </group>
+    </node>
 
     <!--rviz-->
     <include file="$(find eg_navigation)/launch/include/model_show.launch" >
         <arg name="include" value="true"/>
+        <arg name="model" default="$(arg model)" />
     </include>
     <group if="$(arg rviz)">
         <arg name="rvizconfig" default="$(find eg_navigation)/rviz/operation_check.rviz" />

@@ -1,0 +1,25 @@
+<launch>
+    <arg name="ini_x_pos" default= "0.0"/>
+    <arg name="ini_y_pos" default= "0.0"/>
+    <arg name="ini_z_pos" default= "0.0"/>
+    <arg name="ini_yaw"   default= "-0.8"/>
+    <arg name="world_name" default="$(find kcctsim)/worlds/clearpath_playpen.world"/>
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg world_name)"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model naviton -x $(arg ini_x_pos) -y $(arg ini_y_pos) -z $(arg ini_z_pos) -Y $(arg ini_yaw)" />
+
+    <!-- load the controllers -->
+    <rosparam file="$(find eg_navigation)/config/controller_naviton.yaml" command="load"/>
+    <node name="controller_spawner" pkg="controller_manager"
+            type="spawner" output="screen"
+            args="diff_drive_controller">
+    </node>
+</launch>

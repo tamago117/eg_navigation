@@ -1,0 +1,32 @@
+<launch>
+    <arg name="rviz" default="true"/>
+    <arg name="sim" default="false"/>
+    <arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>
+    <arg name="model" default="$(find eg_navigation)/robots/naviton_2d.urdf.xacro" />
+
+    <group if="$(arg sim)">
+        <include file="$(find eg_navigation)/launch/include/sim.launch" >
+            <arg name="world_name" value="$(arg world_name)"/>
+        </include>
+        <include file="$(find eg_navigation)/launch/include/sensor_sim.launch" />
+    </group>
+
+    <!--joystick -> cmd_vel-->
+    <node name="joy_node" pkg="joy" type="joy_node"/>
+    <node name="joystickPS4" pkg="eg_mixed" type="joystickPS4">
+        <param name="control_rate" value="1.0"/>
+        <group if="$(arg sim)">
+            <remap from="cmd_vel" to="diff_drive_controller/cmd_vel"/>
+        </group>
+    </node>
+
+    <!--rviz-->
+    <include file="$(find eg_navigation)/launch/include/model_show.launch" >
+        <arg name="include" value="true"/>
+        <arg name="model" default="$(arg model)" />
+    </include>
+    <group if="$(arg rviz)">
+        <arg name="rvizconfig" default="$(find eg_navigation)/rviz/operation_check.rviz" />
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+    </group>
+</launch>

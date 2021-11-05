@@ -3,13 +3,6 @@
     <arg name="generate_test_bag" default="false" />
     <arg name="mcl_3dl_config" default="$(find tvc_navigation)/config/mcl_3dl.yaml"/>
 
-    <!-- Robot description -->
-    <include file="$(find tvc_navigation)/launch/include/model_show.launch" >
-        <arg name="include" value="true"/>
-    </include>
-
-    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
-
     <!--velodyne-->
     <include file="$(find tvc_navigation)/launch/include/vlp16db_unity.launch"/>
 
