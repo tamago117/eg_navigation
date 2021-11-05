@@ -1,4 +1,4 @@
-# eg_navigaion
+# eg_navigation
 ROS meta package for robot 2d/3d navigation
 
 # Requirments
@@ -9,7 +9,7 @@ ROS meta package for robot 2d/3d navigation
 # install
 ```
 cd ~/catkin_ws/src
-git clone https://github.com/tamago117/eg_navigaion
+git clone https://github.com/tamago117/eg_navigation
 git clone https://github.com/tamago117/control_panel_plugin
 cd ..
 catkin_make
