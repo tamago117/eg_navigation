@@ -1,0 +1,23 @@
+<launch>
+    <arg name="rviz" default="true"/>
+
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+    <node name="odom_tf_broadcaster" pkg="tvc_navigation" type ="odom_tf_broadcaster"/>
+
+    <!--joystick -> cmd_vel-->
+    <node name="joy_node" pkg="joy" type="joy_node"/>
+    <node name="joystickPS4" pkg="tvc_navigation" type="joystickPS4"/>
+
+    <!--velodyne-->
+    <include file="$(find tvc_navigation)/launch/include/vlp16db_unity.launch"/>
+
+    <!--rviz-->
+    <include file="$(find tvc_navigation)/launch/include/model_show.launch" >
+        <arg name="include" value="true"/>
+    </include>
+    <group if="$(arg rviz)">
+        <arg name="rvizconfig" default="$(find tvc_navigation)/rviz/operation_check.rviz" />
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+    </group>
+</launch>

@@ -1,0 +1,12 @@
+max_nn : 100
+robot_radius : 0.6
+x_max : 1.0
+x_min : -1.0
+y_max : 0.6
+y_min : -0.6
+loop_rate : 50
+dt : 0.5
+max_linear_vel : 1.2
+max_angular_vel : 0.6
+recovery_start_time : 0.3
+dangerous_potential : true

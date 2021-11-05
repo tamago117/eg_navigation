@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="way_file" default="way1.csv"/>
+
+    <include file="$(find tvc_navigation)/launch/include/slam_2d.launch">
+        <arg name="nav_mode" default="slam"/>
+        <arg name="mapFile" value="$(find tvc_navigation)/resources/map_2d/tukuba/map.yaml"/>
+    </include>
+
+    <node name="wpLoad" pkg="tvc_wpTool" type="wpLoad">
+        <param name="filePath" value="$(find tvc_navigation)/csv/$(arg way_file)"/>
+        <param name="map_frame_id" value="map"/>
+    </node>
+    <node name="wp_visualizer" pkg="tvc_wpTool" type="wp_visualizer">
+        <remap from="path" to="wayPoint/path"/>
+        <param name="markerSize" value="15.0"/>
+    </node>
+    <node name="wpSelect" pkg="tvc_wpTool" type="wpSelect">
+        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="map_frame_id" value="map"/>
+        <param name="maxVelocity" value="0.7"/>
+        <param name="loop_rate" value="20"/>
+        <param name="target_deviation" value="1.5"/>
+        <param name="final_target_deviation" value="0.4"/>
+        <remap from="path" to="wayPoint/path"/>
+        <remap from="successPlan" to="astar_planning_node/successPlan"/>
+    </node>
+
+    <node pkg="tvc_navigation" type="costmap_node" name="costmap_node">
+        <rosparam command="load" file="$(find tvc_navigation)/config/local_costmap_params.yaml" />
+    </node>
+
+    <node name="astar_planning_node" pkg="tvc_navigation" type="astar_planning_node" output="screen">
+        <rosparam command="load" file="$(find tvc_navigation)/config/astar_planning.yaml" />
+        <remap from="astar_plannnig_node/goal" to="targetWpPose"/>
+        <remap from="astar_plannnig_node/costmap" to="costmap_node/my_costmap/costmap"/>
+    </node>
+
+    <node name="lane_planner" pkg="tvc_navigation" type="lane_planner">
+        <rosparam file="$(find tvc_navigation)/config/lane_planner.yaml" command="load" />
+        <remap from="lane_planner/costmap" to="costmap_node/my_costmap/costmap"/>
+        <remap from="path" to="astar_plannnig_node/path"/>
+        <remap from="robot_now_vel" to="cmd_vel"/>
+    </node>
+
+    <node name="pure_posePursuit" pkg="tvc_navigation" type="pure_posePursuit">
+        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="map_frame_id" value="map"/>
+        <param name="loop_rate" value="30"/>
+        <param name="maxVelocity" value="1.2"/>
+        <param name="minVelocity" value="0.2"/>
+        <param name="max_angular_vel" value="0.5"/>
+        <param name="maxCurvature" value="1"/>
+        <remap from="pure_posePursuit/pose_in" to="lane_planner/pose_out"/>
+    </node>
+
+
+    <node name="wpBack_recovery" pkg="tvc_navigation" type="wpBack_recovery" output="screen">
+        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="map_frame_id" value="map"/>
+        <param name="loop_rate" value="20"/>
+        <param name="linear_vel" value="-0.3"/>
+        <param name="max_angular_vel" value="0.5"/>
+        <param name="duration" value="6.0"/>
+        <param name="recovery_leastDistance" value="2.0"/>
+        <param name="fin_recovery_deviation" value="0.2"/>
+        <remap from="path" to="wayPoint/path"/>
+    </node>
+
+    <!--<node pkg="tvc_navigation" name="simple_recovery" type="simple_recovery">
+        <param name="linear_vel" value="-0.3"/>
+        <param name="angular_vel" value="0"/>
+        <param name="duration" value="1.5"/>
+    </node>-->
+
+    <node name="twist_maneger" pkg="tvc_navigation" type="twist_maneger">
+        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="map_frame_id" value="map"/>
+        <param name="loop_rate" value="30"/>
+        <remap from="twist_maneger/targetWpPose_in" to="targetWpPose"/>
+        <remap from="twist_maneger/targetPose_in" to="lane_planner/pose_out"/>
+        <remap from="cmd_vel" to="pure_posePursuit/cmd_vel"/>
+        <remap from="waypoint/now" to="targetWp"/>
+    </node>
+    <!--safety function-->
+    <node pkg="tvc_navigation" name="laser2pc" type="laser2pc"/>
+    <node pkg="tvc_navigation" name="safety_limit" type="safety_limit" output="screen">
+        <rosparam file="$(find tvc_navigation)/config/safety_limit.yaml" command="load" />
+        <remap from="safety_limit/cmd_vel_in" to="twist_maneger/cmd_vel"/>
+        <remap from="safety_limit/cmd_vel_out" to="cmd_vel"/>
+        <remap from="cloud" to="laser2pc/pc2"/>
+        <remap from="safety_limit/costmap" to="costmap_node/my_costmap/costmap"/>
+     </node>
+
+    <!--rviz-->
+    <arg name="rvizconfig" default="$(find tvc_navigation)/rviz/wpTrack.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" respawn="true" />
+
+</launch>

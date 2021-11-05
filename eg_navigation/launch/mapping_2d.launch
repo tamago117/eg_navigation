@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<launch>
+
+    <include file="$(find tvc_navigation)/launch/include/slam_2d.launch">
+        <arg name="nav_mode" default="mapping"/>
+        <arg name="move_base" default="false"/>
+    </include>
+
+    <!--joystick-->
+    <node name="joystickPS4" pkg="tvc_navigation" type="joystickPS4">
+        <remap from="cmd_vel" to="ps4/cmd_vel"/>
+    </node>
+    <node name="joy_node" pkg="joy" type="joy_node"/>
+
+    <!--safety function-->
+    <node pkg="tvc_navigation" name="laser2pc" type="laser2pc"/>
+    <node pkg="tvc_navigation" name="safety_limit" type="safety_limit" output="screen">
+        <param name="max_nn" value="100"/>
+        <param name="robot_radius" value="0.6"/>
+        <param name="x_max" value="3.0"/>
+        <param name="x_min" value="-1.0"/>
+        <param name="y_max" value="0.7"/>
+        <param name="y_min" value="-0.7"/>
+        <param name="loop_rate" value="50"/>
+        <param name="dt" value="0.5"/>
+        <param name="recovery_start_time" value="0.5"/>
+
+        <remap from="safety_limit/cmd_vel_in" to="ps4/cmd_vel"/>
+        <remap from="safety_limit/cmd_vel_out" to="cmd_vel"/>
+        
+
+     </node>
+
+    <!--rviz-->
+    <arg name="rvizconfig" default="$(find tvc_navigation)/rviz/mapping.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" respawn="true" />
+    
+</launch>

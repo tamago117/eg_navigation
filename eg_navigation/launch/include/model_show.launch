@@ -1,0 +1,15 @@
+<launch>
+  <arg name="model" default="$(find kcctsim)/robots/naviton.urdf.xacro" />
+
+  <arg name="include" default="false"/>
+  <param name="robot_description" command="$(find xacro)/xacro.py $(arg model) --inorder" />
+  <node pkg="tf" type="static_transform_publisher" name="base_transform" args="-0.06229 0 0.920552 0 0 0 base_link velodyne 100"/>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+  <group unless="$(arg include)">
+    <arg name="rvizconfig" default="$(find tvc_navigation)/rviz/model_show.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+  </group>
+</launch>

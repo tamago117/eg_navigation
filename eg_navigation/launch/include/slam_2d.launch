@@ -1,0 +1,57 @@
+<launch>
+    <arg name="nav_mode" default="slam"/>
+    <arg name="move_base" default="false"/>
+    <arg name="mapFile" default = "$(find tvc_navigation)/resources/map_2d/tukuba/map.yaml"/>
+
+    <!-- Robot description -->
+    <include file="$(find tvc_navigation)/launch/include/model_show.launch" >
+        <arg name="include" value="true"/>
+    </include>
+
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+    <!--velodyne-->
+    <include file="$(find tvc_navigation)/launch/include/vlp16db_unity.launch"/>
+
+    <!--odometry-->
+    <node name="odom_tf_broadcaster" pkg="tvc_navigation" type ="odom_tf_broadcaster"/>
+    <!--<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+        <rosparam command="load" file="$(find tvc_navigation)/config/ekf_localization/model1.yaml" />
+        <remap from="odometry/filtered" to="fusion/odom" />
+    </node>-->
+
+    <group if="$(eval nav_mode == 'mapping')">
+        <!--mapping-->
+        <!--gmapping-->
+        <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" clear_params="true">
+            <rosparam command="load" file="$(find tvc_navigation)/config/gmapping.yaml" />
+        </node>
+    </group>
+
+    <group if="$(eval nav_mode == 'slam')">
+        <!-- amcl -->
+        <node pkg="map_server" type="map_server" name="map_server" args="$(arg mapFile)">
+            <param name="frame_id" value="map"/>
+        </node>
+        <node pkg="amcl" type="amcl" name="amcl" clear_params="true">
+            <rosparam command="load" file="$(find tvc_navigation)/config/amcl.yaml" />
+        </node>
+    </group>
+
+    <!-- move_base -->
+    <!--<group if="$(arg move_base)">
+        <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+            <rosparam file="$(find tvc_navigation)/config/move_base/local_costmap_params_old.yaml" command="load" />
+            <rosparam file="$(find tvc_navigation)/config/move_base/global_costmap_params_old.yaml" command="load" />
+            <rosparam file="$(find tvc_navigation)/config/move_base/base_local_planner_params.yaml" command="load" />
+
+            <param name="global_costmap/global_frame" value="map" />
+            <param name="global_costmap/robot_base_frame" value="base_footprint" />
+            <param name="local_costmap/laser_scan_sensor/sensor_frame" value="lidar_link" />
+            <param name="local_costmap/laser_scan_sensor/topic" value="scan_filter" />
+            <param name="local_costmap/global_frame" value="odom" />
+            <param name="local_costmap/robot_base_frame" value="base_footprint" />
+        </node>
+    </group>-->
+
+</launch>
