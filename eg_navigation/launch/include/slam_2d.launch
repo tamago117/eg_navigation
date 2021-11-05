@@ -1,7 +1,7 @@
 <launch>
     <arg name="nav_mode" default="localization"/>
     <arg name="move_base" default="false"/>
-    <arg name="mapFile" default = "$(find eg_navigation)/resources/map_2d/tukuba/map.yaml"/>
+    <arg name="mapFile" default="$(find eg_navigation)/resources/map_2d/tukuba/map.yaml"/>
 
     <!--odometry-->
     <!--<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">

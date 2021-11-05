@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="sim" default="false"/>
+    <arg name="sim" default="true"/>
     <arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>
     <arg name="model" default="$(find eg_navigation)/robots/naviton_2d.urdf.xacro" />
 
@@ -19,15 +19,12 @@
     <!--slam packages-->
     <include file="$(find eg_navigation)/launch/include/slam_2d.launch">
         <arg name="nav_mode" default="mapping"/>
-        <arg name="move_base" default="false"/>
     </include>
     <!--joy stick-->
     <node name="joy_node" pkg="joy" type="joy_node"/>
     <node name="joystickPS4" pkg="eg_mixed" type="joystickPS4">
         <param name="control_rate" value="1.0"/>
-        <group if="$(arg sim)">
-            <remap from="cmd_vel" to="diff_drive_controller/cmd_vel"/>
-        </group>
+        <remap from="cmd_vel" to="ps4/cmd_vel"/>
     </node>
 
     <!--safety function-->
@@ -44,12 +41,13 @@
         <param name="recovery_start_time" value="0.5"/>
 
         <remap from="safety_limit/cmd_vel_in" to="ps4/cmd_vel"/>
-        <group if="$(arg sim)">
+        <remap from="safety_limit/cmd_vel_out" to="diff_drive_controller/cmd_vel"/>
+        <!--<group if="$(arg sim)">
             <remap from="safety_limit/cmd_vel_out" to="diff_drive_controller/cmd_vel"/>
         </group>
         <group unless="$(arg sim)">
             <remap from="safety_limit/cmd_vel_out" to="cmd_vel"/>
-        </group>
+        </group>-->
     </node>
 
     <!--rviz-->

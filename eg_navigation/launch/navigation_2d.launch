@@ -2,21 +2,39 @@
 
 <launch>
     <arg name="way_file" default="way1.csv"/>
+    <arg name="mapFile" value="$(find eg_navigation)/resources/map_2d/clearpath/map.yaml"/>
 
-    <include file="$(find tvc_navigation)/launch/include/slam_2d.launch">
-        <arg name="nav_mode" default="slam"/>
-        <arg name="mapFile" value="$(find tvc_navigation)/resources/map_2d/tukuba/map.yaml"/>
+    <arg name="sim" default="true"/>
+    <arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>
+    <arg name="model" default="$(find eg_navigation)/robots/naviton_2d.urdf.xacro" />
+
+    <!--gazebo-->
+    <group if="$(arg sim)">
+        <include file="$(find eg_navigation)/launch/include/sim.launch" >
+            <arg name="world_name" value="$(arg world_name)"/>
+        </include>
+        <include file="$(find eg_navigation)/launch/include/sensor_sim.launch" />
+    </group>
+    <!--model show-->
+    <include file="$(find eg_navigation)/launch/include/model_show.launch" >
+        <arg name="include" value="true"/>
+        <arg name="model" default="$(arg model)" />
     </include>
 
-    <node name="wpLoad" pkg="tvc_wpTool" type="wpLoad">
-        <param name="filePath" value="$(find tvc_navigation)/csv/$(arg way_file)"/>
+    <include file="$(find eg_navigation)/launch/include/slam_2d.launch">
+        <arg name="nav_mode" default="localization"/>
+        <arg name="mapFile" value="$(find eg_navigation)/resources/map_2d/clearpath/map.yaml"/>
+    </include>
+
+    <node name="wpLoad" pkg="eg_wptool" type="wpLoad">
+        <param name="filePath" value="$(find eg_navigation)/csv/$(arg way_file)"/>
         <param name="map_frame_id" value="map"/>
     </node>
-    <node name="wp_visualizer" pkg="tvc_wpTool" type="wp_visualizer">
+    <node name="wpVisualizer" pkg="eg_wptool" type="wpVisualizer">
         <remap from="path" to="wayPoint/path"/>
         <param name="markerSize" value="15.0"/>
     </node>
-    <node name="wpSelect" pkg="tvc_wpTool" type="wpSelect">
+    <node name="wpSelect" pkg="eg_wptool" type="wpSelect">
         <param name="base_link_frame_id" value="base_foot_point"/>
         <param name="map_frame_id" value="map"/>
         <param name="maxVelocity" value="0.7"/>
@@ -27,24 +45,24 @@
         <remap from="successPlan" to="astar_planning_node/successPlan"/>
     </node>
 
-    <node pkg="tvc_navigation" type="costmap_node" name="costmap_node">
+    <node pkg="eg_mixed" type="costmap_node" name="costmap_node">
         <rosparam command="load" file="$(find tvc_navigation)/config/local_costmap_params.yaml" />
     </node>
 
-    <node name="astar_planning_node" pkg="tvc_navigation" type="astar_planning_node" output="screen">
-        <rosparam command="load" file="$(find tvc_navigation)/config/astar_planning.yaml" />
+    <node name="astar_planning_node" pkg="eg_planner" type="astar_planning_node" output="screen">
+        <rosparam command="load" file="$(find eg_navigation)/config/astar_planning.yaml" />
         <remap from="astar_plannnig_node/goal" to="targetWpPose"/>
         <remap from="astar_plannnig_node/costmap" to="costmap_node/my_costmap/costmap"/>
     </node>
 
-    <node name="lane_planner" pkg="tvc_navigation" type="lane_planner">
-        <rosparam file="$(find tvc_navigation)/config/lane_planner.yaml" command="load" />
+    <node name="lane_planner" pkg="eg_planner" type="lane_planner">
+        <rosparam file="$(find eg_navigation)/config/lane_planner.yaml" command="load" />
         <remap from="lane_planner/costmap" to="costmap_node/my_costmap/costmap"/>
         <remap from="path" to="astar_plannnig_node/path"/>
         <remap from="robot_now_vel" to="cmd_vel"/>
     </node>
 
-    <node name="pure_posePursuit" pkg="tvc_navigation" type="pure_posePursuit">
+    <node name="pure_posePursuit" pkg="eg_track" type="pure_posePursuit">
         <param name="base_link_frame_id" value="base_foot_point"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="30"/>
@@ -56,7 +74,7 @@
     </node>
 
 
-    <node name="wpBack_recovery" pkg="tvc_navigation" type="wpBack_recovery" output="screen">
+    <node name="wpBack_recovery" pkg="eg_safety" type="wpBack_recovery" output="screen">
         <param name="base_link_frame_id" value="base_foot_point"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="20"/>
@@ -68,13 +86,13 @@
         <remap from="path" to="wayPoint/path"/>
     </node>
 
-    <!--<node pkg="tvc_navigation" name="simple_recovery" type="simple_recovery">
+    <!--<node pkg="eg_safety" name="simple_recovery" type="simple_recovery">
         <param name="linear_vel" value="-0.3"/>
         <param name="angular_vel" value="0"/>
         <param name="duration" value="1.5"/>
     </node>-->
 
-    <node name="twist_maneger" pkg="tvc_navigation" type="twist_maneger">
+    <node name="twist_maneger" pkg="eg_navigation" type="twist_maneger">
         <param name="base_link_frame_id" value="base_foot_point"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="30"/>
@@ -84,9 +102,9 @@
         <remap from="waypoint/now" to="targetWp"/>
     </node>
     <!--safety function-->
-    <node pkg="tvc_navigation" name="laser2pc" type="laser2pc"/>
-    <node pkg="tvc_navigation" name="safety_limit" type="safety_limit" output="screen">
-        <rosparam file="$(find tvc_navigation)/config/safety_limit.yaml" command="load" />
+    <node pkg="eg_mixed" name="laser2pc" type="laser2pc"/>
+    <node pkg="eg_safety" name="safety_limit" type="safety_limit" output="screen">
+        <rosparam file="$(find eg_navigation)/config/safety_limit.yaml" command="load" />
         <remap from="safety_limit/cmd_vel_in" to="twist_maneger/cmd_vel"/>
         <remap from="safety_limit/cmd_vel_out" to="cmd_vel"/>
         <remap from="cloud" to="laser2pc/pc2"/>
@@ -94,7 +112,7 @@
      </node>
 
     <!--rviz-->
-    <arg name="rvizconfig" default="$(find tvc_navigation)/rviz/wpTrack.rviz" />
+    <arg name="rvizconfig" default="$(find eg_navigation)/rviz/wpTrack.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" respawn="true" />
 
 </launch>

@@ -1,6 +1,6 @@
 <launch>
     <arg name="rviz" default="true"/>
-    <arg name="sim" default="false"/>
+    <arg name="sim" default="true"/>
     <arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>
     <arg name="model" default="$(find eg_navigation)/robots/naviton_2d.urdf.xacro" />
 
@@ -15,9 +15,7 @@
     <node name="joy_node" pkg="joy" type="joy_node"/>
     <node name="joystickPS4" pkg="eg_mixed" type="joystickPS4">
         <param name="control_rate" value="1.0"/>
-        <group if="$(arg sim)">
-            <remap from="cmd_vel" to="diff_drive_controller/cmd_vel"/>
-        </group>
+        <remap from="cmd_vel" to="diff_drive_controller/cmd_vel"/>
     </node>
 
     <!--rviz-->
