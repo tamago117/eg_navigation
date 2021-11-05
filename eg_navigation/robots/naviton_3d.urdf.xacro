@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<robot name="naviton" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find kcctsim)/urdf/base/base.urdf.xacro"/>
+  <xacro:include filename="$(find kcctsim)/urdf/wheel/wheel.urdf.xacro"/>
+  <xacro:include filename="$(find kcctsim)/urdf/sensors/gps/gps.urdf.xacro"/>
+  <xacro:include filename="$(find kcctsim)/urdf/sensors/gim30/gim30.urdf.xacro"/>
+  <xacro:include filename="$(find kcctsim)/urdf/sensors/lrf/lrf.urdf.xacro"/>
+  <xacro:include filename="$(find velodyne_description)/urdf/HDL-32E.urdf.xacro"/>
+  <xacro:include filename="$(find kcctsim)/urdf/sensors/imu/imu.urdf.xacro" />
+
+  <!-- =============== Link & Joint =============== -->
+  <!-- Base -->
+  <link name="base_foot_point"/>
+  <xacro:base_v0 parent="base_foot_point">
+	<origin xyz="0 0 0.0"/>
+  </xacro:base_v0>
+
+  <!-- Wheel -->
+  <!-- Right Wheel -->
+  <xacro:wheel_v0 prefix="right" parent="base_link">
+	<origin xyz="0 -0.2775 0.1575"/>
+	<axis xyz="0 1 0"/>
+  </xacro:wheel_v0>
+  <!-- Left Wheel -->
+  <xacro:wheel_v0 prefix="left" parent="base_link">
+	<origin xyz="0 0.2775 0.1575" rpy="0 0 ${M_PI}"/>
+	<axis xyz="0 -1 0"/>
+  </xacro:wheel_v0>
+
+  <!-- Sensors -->
+  <!-- GPS -->
+ <!--- <xacro:gps_v0 parent="base_link">
+	<origin xyz="-0.06229 0 0.420552" rpy="0 0 -${M_PI}"/>
+  </xacro:gps_v0>-->
+
+  <!-- Gim30 -->
+ <!--<xacro:gim30_v0 parent="base_link">
+  	<origin xyz="0.07395931 0 0.24578237"/>
+  </xacro:gim30_v0>-->
+
+  <!-- Front LRF -->
+  <xacro:lrf_v0 prefix="front" parent="base_link">
+  	<origin xyz="0.225 -0.245 0.195"/>
+  </xacro:lrf_v0>
+
+  <!-- Rear LRF -->
+  <xacro:lrf_v0 prefix="rear" parent="base_link">
+  	<origin xyz="-0.485 0.245 0.195" rpy="0 0 -${M_PI}"/>
+  </xacro:lrf_v0>
+
+  <link name="camera_link"/>
+  <joint name="lrf_link_joint" type="fixed">
+	<parent link="base_link"/>
+	<child link="camera_link"/>
+	<origin xyz="0 0 0.195"/>
+  </joint>
+<!--
+  <link name="imu_link"/>
+  <joint name="imu_link_joint" type="fixed">
+	<parent link="base_link"/>
+	<child link="imu_link"/>
+	<origin xyz="0 0 0.051" rpy="0 0 0" />
+  </joint>-->
+
+  <!-- ===============  Transmission =============== -->
+  <xacro:wheel_trans_v0 prefix="right"/>
+  <xacro:wheel_trans_v0 prefix="left"/>
+
+  <!-- =============== Gazebo =============== -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <!-- <robotNamespace>fourth_robot</robotNamespace> -->
+    </plugin>
+  </gazebo>
+
+  <!-- Base -->
+  <xacro:base_gazebo_v0/>
+
+  <!-- Wheel -->
+  <xacro:wheel_gazebo_v0 prefix="right"/>
+  <xacro:wheel_gazebo_v0 prefix="left"/>
+  <!-- <xacro:wheel_gazebo_control_v0 rate="25"/> -->
+
+  <!--IMU-->
+  <xacro:imu_macro prefix="imu" parent="base_link" xyz="0 0 0"/>
+
+  <!-- LRF -->
+  <xacro:lrf_gazebo_v0 topic_name="scan1" prefix="front"
+					   min_rad="-1.65806278939" max_rad="1.65806278939"
+					   min_range="0.10" max_range="60.0"/>
+  <xacro:lrf_gazebo_v0 topic_name="scan2" prefix="rear"
+					   min_rad="-2.35619449019" max_rad="1.65619449019"
+					   min_range="0.10" max_range="60.0"/>
+  <!-- VHDL-32E -->
+  <HDL-32E parent="base_link" name="velodyne" topic="velodyne_points" hz="10" samples="1024" gpu="true">
+      <origin xyz="0 0 0.8" rpy="0 0 0" />
+  </HDL-32E>
+</robot>

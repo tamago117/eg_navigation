@@ -1,20 +1,17 @@
 <launch>
     <arg name="nav_mode" default="slam"/>
     <arg name="move_base" default="false"/>
-    <arg name="mapFile" default = "$(find tvc_navigation)/resources/map_2d/tukuba/map.yaml"/>
+    <arg name="mapFile" default = "$(find eg_navigation)/resources/map_2d/tukuba/map.yaml"/>
 
     <!-- Robot description -->
-    <include file="$(find tvc_navigation)/launch/include/model_show.launch" >
+    <include file="$(find eg_navigation)/launch/include/model_show.launch" >
         <arg name="include" value="true"/>
     </include>
 
-    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
-
     <!--velodyne-->
-    <include file="$(find tvc_navigation)/launch/include/vlp16db_unity.launch"/>
+    <include file="$(find eg_navigation)/launch/include/vlp16db.launch"/>
 
     <!--odometry-->
-    <node name="odom_tf_broadcaster" pkg="tvc_navigation" type ="odom_tf_broadcaster"/>
     <!--<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
         <rosparam command="load" file="$(find tvc_navigation)/config/ekf_localization/model1.yaml" />
         <remap from="odometry/filtered" to="fusion/odom" />

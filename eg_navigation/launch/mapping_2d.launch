@@ -1,20 +1,21 @@
 <?xml version="1.0"?>
 <launch>
 
-    <include file="$(find tvc_navigation)/launch/include/slam_2d.launch">
+    <include file="$(find eg_navigation)/launch/include/slam_2d.launch">
         <arg name="nav_mode" default="mapping"/>
         <arg name="move_base" default="false"/>
     </include>
 
     <!--joystick-->
-    <node name="joystickPS4" pkg="tvc_navigation" type="joystickPS4">
+    <node name="joystickPS4" pkg="eg_navigation" type="joystickPS4">
         <remap from="cmd_vel" to="ps4/cmd_vel"/>
+        <param name="control_rate" value="1.0"/>
     </node>
     <node name="joy_node" pkg="joy" type="joy_node"/>
 
     <!--safety function-->
-    <node pkg="tvc_navigation" name="laser2pc" type="laser2pc"/>
-    <node pkg="tvc_navigation" name="safety_limit" type="safety_limit" output="screen">
+    <node pkg="eg_navigation" name="laser2pc" type="laser2pc"/>
+    <node pkg="eg_navigation" name="safety_limit" type="safety_limit" output="screen">
         <param name="max_nn" value="100"/>
         <param name="robot_radius" value="0.6"/>
         <param name="x_max" value="3.0"/>

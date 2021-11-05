@@ -1,6 +1,23 @@
 # eg_navigaion
 ROS meta package for robot 2d/3d navigation
 
+# Requirments
+
+- ROS Melodic
+- Gazebo(ver9.4.0) (for simulation) ->[update gazebo](https://bitbucket.org/DataspeedInc/velodyne_simulator/src/master/gazebo_upgrade.md)
+
+# install
+```
+cd ~/catkin_ws/src
+git clone https://github.com/tamago117/eg_navigaion
+git clone https://github.com/tamago117/control_panel_plugin
+cd ..
+catkin_make
+source ~/catkin_ws/devel/setup.bash
+```
+
+# packages
+
 ## eg_mixed
 mixed node for robot navigation
 
@@ -8,7 +25,7 @@ mixed node for robot navigation
 sample launch
 
 ## eg_planner
-planner 
+planner
 
 ## eg_safety
 safety and recover
