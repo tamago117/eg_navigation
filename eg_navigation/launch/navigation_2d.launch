@@ -32,7 +32,7 @@
     </node>
     <node name="wpVisualizer" pkg="eg_wptool" type="wpVisualizer">
         <remap from="path" to="wayPoint/path"/>
-        <param name="markerSize" value="15.0"/>
+        <param name="markerSize" value="5.0"/>
     </node>
     <node name="wpSelect" pkg="eg_wptool" type="wpSelect">
         <param name="base_link_frame_id" value="base_foot_point"/>
@@ -46,7 +46,7 @@
     </node>
 
     <node pkg="eg_mixed" type="costmap_node" name="costmap_node">
-        <rosparam command="load" file="$(find tvc_navigation)/config/local_costmap_params.yaml" />
+        <rosparam command="load" file="$(find eg_navigation)/config/local_costmap_params.yaml" />
     </node>
 
     <node name="astar_planning_node" pkg="eg_planner" type="astar_planning_node" output="screen">
@@ -66,10 +66,10 @@
         <param name="base_link_frame_id" value="base_foot_point"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="30"/>
-        <param name="maxVelocity" value="1.2"/>
-        <param name="minVelocity" value="0.2"/>
+        <param name="maxVelocity" value="1.0"/>
+        <param name="minVelocity" value="0.1"/>
         <param name="max_angular_vel" value="0.5"/>
-        <param name="maxCurvature" value="1"/>
+        <param name="maxCurvature" value="3"/>
         <remap from="pure_posePursuit/pose_in" to="lane_planner/pose_out"/>
     </node>
 
@@ -106,7 +106,7 @@
     <node pkg="eg_safety" name="safety_limit" type="safety_limit" output="screen">
         <rosparam file="$(find eg_navigation)/config/safety_limit.yaml" command="load" />
         <remap from="safety_limit/cmd_vel_in" to="twist_maneger/cmd_vel"/>
-        <remap from="safety_limit/cmd_vel_out" to="cmd_vel"/>
+        <remap from="safety_limit/cmd_vel_out" to="diff_drive_controller/cmd_vel"/>
         <remap from="cloud" to="laser2pc/pc2"/>
         <remap from="safety_limit/costmap" to="costmap_node/my_costmap/costmap"/>
      </node>

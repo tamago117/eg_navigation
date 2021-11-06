@@ -104,10 +104,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES eg_navigation
-#  CATKIN_DEPENDS roscpp rospy std_msgs tf2_ros
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES eg_navigation
+  CATKIN_DEPENDS roscpp rospy std_msgs tf2_ros
+  DEPENDS system_lib
 )
 
 ###########
@@ -117,7 +117,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+ include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -150,6 +150,11 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+
+add_executable(twist_maneger   src/twist_maneger.cpp)
+target_link_libraries(twist_maneger
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
