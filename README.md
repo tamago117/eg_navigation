@@ -16,6 +16,17 @@ catkin_make
 source ~/catkin_ws/devel/setup.bash
 ```
 
+# demo
+2d
+```
+roslaunch eg_navigation navigation_2d.launch
+```
+3d
+```
+roslaunch eg_navigation navigation_3d.launch
+```
+![Screenshot from eg_navigation_2d_safety-2021-11-06_17 52 45 webm](https://user-images.githubusercontent.com/38370926/140604530-01eee6b0-c831-4618-b33a-4c3bcf2c967c.png)
+
 # packages
 
 ## eg_mixed
