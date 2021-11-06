@@ -46,7 +46,7 @@
     </node>
 
     <node pkg="eg_mixed" type="costmap_node" name="costmap_node">
-        <rosparam command="load" file="$(find eg_navigation)/config/local_costmap_params.yaml" />
+        <rosparam command="load" file="$(find eg_navigation)/config/local_costmap_params_2d.yaml" />
     </node>
 
     <node name="astar_planning_node" pkg="eg_planner" type="astar_planning_node" output="screen">
@@ -112,7 +112,7 @@
      </node>
 
     <!--rviz-->
-    <arg name="rvizconfig" default="$(find eg_navigation)/rviz/wpTrack.rviz" />
+    <arg name="rvizconfig" default="$(find eg_navigation)/rviz/navigation_2d.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" respawn="true" />
 
 </launch>

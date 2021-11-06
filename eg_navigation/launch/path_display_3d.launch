@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="fileName" default="way1_3d.csv"/>
+    <arg name="map_pcd" default = "$(find eg_navigation)/resources/pcd/clearpath.pcd"/>
+
+    <node name="wpLoad" pkg="eg_wptool" type="wpLoad" output="screen">
+        <param name="filePath" value="$(find eg_navigation)/csv/$(arg fileName)"/>
+        <param name="map_frame_id" value="map"/>
+        <remap from="wayPoint/path" to="path"/>
+    </node>
+    <!--map generate-->
+    <node pkg="pcl_ros" type="pcd_to_pointcloud" name="pcd_to_pointcloud"
+    args="$(arg map_pcd)" >
+        <param name="frame_id" value="map" />
+        <param name="latch" value="true"/>
+        <remap from="cloud_pcd" to="mapcloud" />
+    </node>
+    <node name="wpVisualizer" pkg="eg_wptool" type="wpVisualizer">
+        <param name="markerSize" value="5.0"/>
+    </node>
+
+    <arg name="rvizconfig" default="$(find eg_navigation)/rviz/path_display_3d.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+</launch>
