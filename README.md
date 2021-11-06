@@ -26,6 +26,7 @@ roslaunch eg_navigation navigation_2d.launch
 roslaunch eg_navigation navigation_3d.launch
 ```
 ![Screenshot from eg_navigation_2d_safety-2021-11-06_17 52 45 webm](https://user-images.githubusercontent.com/38370926/140604530-01eee6b0-c831-4618-b33a-4c3bcf2c967c.png)
+![Screenshot from eg_navigation_3d-2021-11-06_22 38 16 webm](https://user-images.githubusercontent.com/38370926/140612538-51ea6d2e-250b-4f51-9a03-0403e6811fc2.png)
 
 # packages
 
