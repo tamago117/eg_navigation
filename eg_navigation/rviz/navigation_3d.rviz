@@ -168,8 +168,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: -0.14673200249671936
-        Min Value: -0.659843921661377
+        Max Value: -0.10603941977024078
+        Min Value: -0.6356161236763
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -205,11 +205,11 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: PointCloud2
+      Name: velodyne
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -220,7 +220,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Class: rviz/TF
       Enabled: true
       Frame Timeout: 15
@@ -369,7 +369,7 @@ Visualization Manager:
       Marker Topic: /lane_planner/marker_array
       Name: MarkerArray
       Namespaces:
-        {}
+        plannig_point: true
       Queue Size: 99
       Value: true
     - Alpha: 1
@@ -427,7 +427,7 @@ Visualization Manager:
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: PointCloud2
+      Name: mapCloud
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -455,7 +455,7 @@ Visualization Manager:
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: PointCloud2
+      Name: matchCloud
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -495,7 +495,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 32.69822692871094
+      Distance: 43.34920120239258
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -510,10 +510,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.1597968339920044
+      Pitch: 1.0847969055175781
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.395390748977661
+      Yaw: 2.4853925704956055
     Saved: ~
 Window Geometry:
   Displays:
@@ -532,6 +532,6 @@ Window Geometry:
     collapsed: false
   Width: 1299
   X: 406
-  Y: 82
+  Y: 45
   modeSelect:
     collapsed: false

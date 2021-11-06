@@ -14,6 +14,21 @@ int main(int argc, char** argv){
 #endif
   ros::NodeHandle n;
   costmap.start();
-  ros::spin();
+
+  ros::Rate loop_rate(1);
+  int count = 0;
+  while(ros::ok()){
+    if(count == 5){
+      costmap.resetLayers();
+      count = 0;
+    }else{
+      count++;
+    }
+
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
+
+  //ros::spin();
   return 0;
 }
