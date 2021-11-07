@@ -1,7 +1,8 @@
 <launch>
     <arg name="rviz" default="true"/>
     <arg name="sim" default="true"/>
-    <arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>
+    <!--<arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>-->
+    <arg name="world_name" default="$(find eg_navigation)/worlds/autoware.world"/>
     <arg name="model" default="$(find eg_navigation)/robots/naviton_3d.urdf.xacro" />
 
     <group if="$(arg sim)">
