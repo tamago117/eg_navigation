@@ -3,6 +3,7 @@
     <arg name="sim" default="true"/>
     <arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>
     <arg name="model" default="$(find eg_navigation)/robots/naviton_2d.urdf.xacro" />
+    <arg name="gmapping_config" default="$(find eg_navigation)/config/gmapping.yaml" />
 
     <!--gazebo-->
     <group if="$(arg sim)">
@@ -19,6 +20,7 @@
     <!--slam packages-->
     <include file="$(find eg_navigation)/launch/include/slam_2d.launch">
         <arg name="nav_mode" default="mapping"/>
+        <arg name="gmapping_config" default="$(arg gmapping_config)" />
     </include>
     <!--joy stick-->
     <node name="joy_node" pkg="joy" type="joy_node"/>
