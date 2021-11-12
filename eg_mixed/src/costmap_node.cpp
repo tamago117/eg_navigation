@@ -15,10 +15,12 @@ int main(int argc, char** argv){
   ros::NodeHandle n;
   costmap.start();
 
-  ros::Rate loop_rate(1);
+
+  int rate = 5;
+  ros::Rate loop_rate(rate);
   int count = 0;
   while(ros::ok()){
-    if(count == 5){
+    if(count == 5*rate){
       costmap.resetLayers();
       count = 0;
     }else{
