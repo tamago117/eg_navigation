@@ -8,7 +8,7 @@
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
 
   <group unless="$(arg include)">
-    <arg name="rvizconfig" default="$(find tvc_navigation)/rviz/model_show.rviz" />
+    <arg name="rvizconfig" default="$(find eg_navigation)/rviz/model_show.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
   </group>
 </launch>

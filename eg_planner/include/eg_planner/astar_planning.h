@@ -115,8 +115,9 @@ bool a_star::planning(std::vector<double>& fx, std::vector<double>& fy, const ge
 
         for(int i=0; i<motion.size(); i++){
             //search new node according to motion model
+            double distance_goal = sqrt(pow(ngoal->x - (node->x + motion[i].x), 2) + pow(ngoal->y - (node->y + motion[i].y), 2));
             Node* new_node = new Node{node->x + motion[i].x, node->y + motion[i].y,
-                           path_cost[node->x-min_ox][node->y-min_oy] + motion[i].sum_cost + w_gain*sqrt(pow(ngoal->x - node->x, 2) + pow(ngoal->y - node->y, 2)),
+                           path_cost[node->x-min_ox][node->y-min_oy] + motion[i].sum_cost + w_gain*distance_goal + getCost(node->x*resolution, node->y*resolution),
                            node};
 
             //avoid obstract area
@@ -124,7 +125,6 @@ bool a_star::planning(std::vector<double>& fx, std::vector<double>& fy, const ge
                 delete new_node;
                 continue;
             }
-
             //searched area
             if (visit_map[new_node->x-min_ox][new_node->y-min_oy]){
                 delete new_node;
@@ -138,8 +138,8 @@ bool a_star::planning(std::vector<double>& fx, std::vector<double>& fy, const ge
                 path_cost[new_node->x][new_node->y]=path_cost[node->x][node->y]+motion[i].sum_cost;
                 pq.push(new_node);
             }*/
-            if (path_cost[node->x-min_ox][node->y-min_oy]+motion[i].sum_cost < path_cost[new_node->x-min_ox][new_node->y-min_oy]){
-                path_cost[new_node->x-min_ox][new_node->y-min_oy]=path_cost[node->x-min_ox][node->y-min_oy]+motion[i].sum_cost;
+            if (new_node->sum_cost < path_cost[new_node->x-min_ox][new_node->y-min_oy]){
+                path_cost[new_node->x-min_ox][new_node->y-min_oy] = new_node->sum_cost;
                 pq.push(new_node);
             }
 

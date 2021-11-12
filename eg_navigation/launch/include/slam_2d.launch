@@ -2,6 +2,8 @@
     <arg name="nav_mode" default="localization"/>
     <arg name="move_base" default="false"/>
     <arg name="mapFile" default="$(find eg_navigation)/resources/map_2d/tukuba/map.yaml"/>
+    <arg name="gmapping_config" default="$(find eg_navigation)/config/gmapping.yaml" />
+    <arg name="amcl_config" default="$(find eg_navigation)/config/amcl.yaml" />
 
     <!--odometry-->
     <!--<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
@@ -13,7 +15,7 @@
         <!--mapping-->
         <!--gmapping-->
         <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" clear_params="true">
-            <rosparam command="load" file="$(find eg_navigation)/config/gmapping.yaml" />
+            <rosparam command="load" file="$(arg gmapping_config)"/>
         </node>
     </group>
 
@@ -23,7 +25,7 @@
             <param name="frame_id" value="map"/>
         </node>
         <node pkg="amcl" type="amcl" name="amcl" clear_params="true">
-            <rosparam command="load" file="$(find eg_navigation)/config/amcl.yaml" />
+            <rosparam command="load" file="$(arg amcl_config)" />
         </node>
     </group>
 

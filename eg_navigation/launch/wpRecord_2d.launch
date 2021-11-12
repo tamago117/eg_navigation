@@ -5,6 +5,7 @@
     <arg name="loop_rate" default="50"/>
     <arg name="fileName" default="way1"/>
     <arg name="mapFile" value="$(find eg_navigation)/resources/map_2d/clearpath/map.yaml"/>
+    <arg name="amcl_config" default="$(find eg_navigation)/config/amcl.yaml" />
 
     <arg name="sim" default="true"/>
     <arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>
@@ -26,6 +27,7 @@
     <include file="$(find eg_navigation)/launch/include/slam_2d.launch">
         <arg name="nav_mode" default="localization"/>
         <arg name="mapFile" value="$(arg mapFile)"/>
+        <arg name="amcl_config" default="$(arg amcl_config)" />
     </include>
 
     <!--joystick-->
@@ -73,5 +75,5 @@
     <!--rviz-->
     <arg name="rvizconfig" default="$(find eg_navigation)/rviz/wpRecord_2d.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" respawn="true" />
-    
+
 </launch>

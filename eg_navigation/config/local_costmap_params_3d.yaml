@@ -19,6 +19,13 @@ my_costmap:
       sensor_frame: camera_link
       topic: scan
       data_type: LaserScan
+      #sensor_frame: velodyne
+      #topic: velodyne_points
+      #data_type: PointCloud2
+      #min_obstacle_height : 0.2
+      #sensor_frame: floor
+      #topic: mapcloud
+      #data_type: PointCloud2
       marking: true
       clearing: true
       obstacle_range : 5.5
