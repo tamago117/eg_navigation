@@ -136,7 +136,6 @@ int main(int argc, char** argv)
                 continue;
             }
 
-            
             if(star.planning(path_x, path_y, startPose.pose, goalPoseStamp.pose, costmap)){
                 isSuccessPlanning.data = true;
                 goalPose = goalPoseStamp;
@@ -167,7 +166,7 @@ int main(int argc, char** argv)
 
                 path_pub.publish(plan_path);
                 bool_pub.publish(isSuccessPlanning);
-                continue;
+                //continue;
             }
 
             //approximate bezier curve
@@ -257,6 +256,7 @@ int main(int argc, char** argv)
             bool_pub.publish(isSuccessPlanning);
         }
 
+        startPose = nowPosition.getPoseStamped();
         ros::spinOnce();
         loop_rate.sleep();
     }

@@ -6,4 +6,4 @@ resolution : 0.1
 costmapThreshold : 50
 approximationNode : 20
 approximationResolution : 10
-replanning_radius : 0.5
+replanning_radius : 1
