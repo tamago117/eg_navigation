@@ -44,6 +44,7 @@
         <param name="loop_rate" value="20"/>
         <param name="target_deviation" value="1.5"/>
         <param name="final_target_deviation" value="0.4"/>
+        <param name="failed_target_deviation_rate" value="4.0"/>
         <remap from="path" to="wayPoint/path"/>
         <remap from="successPlan" to="astar_planning_node/successPlan"/>
     </node>

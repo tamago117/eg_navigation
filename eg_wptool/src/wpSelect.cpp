@@ -64,6 +64,8 @@ int main(int argc, char** argv)
     double target_deviation, fin_tar_deviation;
     pnh.param<double>("target_deviation", target_deviation, 0.5);
     pnh.param<double>("final_target_deviation", fin_tar_deviation, 0.1);
+    double failed_tar_deviation_rate;
+    pnh.param<double>("failed_target_deviation_rate", failed_tar_deviation_rate, 2);
     double rate;
     pnh.param<double>("loop_rate", rate, 100);
     double maxVelocity;
@@ -93,9 +95,18 @@ int main(int argc, char** argv)
     while(ros::ok())
     {
         if(path.poses.size()>0){
+
+            //if planning fail, increase the target deviation
+            double target_deviation_;
+            if(isSuccessPlanning){
+                target_deviation_ = target_deviation;
+            }else{
+                target_deviation_ = failed_tar_deviation_rate * target_deviation;
+            }
+
             if(trace_wp_mode){
                 //target_deviationになるよう target way pointの更新
-                while(!(poseStampDistance(path.poses[targetWp.data], nowPosition.getPoseStamped()) >= target_deviation))
+                while(!(poseStampDistance(path.poses[targetWp.data], nowPosition.getPoseStamped()) >= target_deviation_))
                 {
                     //end point
                     if(targetWp.data >= (path.poses.size()-1)){
@@ -105,19 +116,11 @@ int main(int argc, char** argv)
                 }
             }
 
-            //if planning fail, increase the target deviation
-            double fin_tar_deviation_;
-            if(isSuccessPlanning){
-                fin_tar_deviation_ = fin_tar_deviation;
-            }else{
-                fin_tar_deviation_ = 2 * fin_tar_deviation;
-            }
-
             //angle adjust at specific wp
             if(targetWp.data >= (path.poses.size()-1)){
                 //distance
                 if(!isReach){
-                    if(poseStampDistance(path.poses[targetWp.data], nowPosition.getPoseStamped()) <= fin_tar_deviation_){
+                    if(poseStampDistance(path.poses[targetWp.data], nowPosition.getPoseStamped()) <= fin_tar_deviation){
                         //isReach = true;
                         mode_pub.publish(mode);
                     }
