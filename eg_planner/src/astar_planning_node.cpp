@@ -133,7 +133,7 @@ int main(int argc, char** argv)
 
                 path_pub.publish(plan_path);
                 bool_pub.publish(isSuccessPlanning);
-                continue;
+               //continue;
             }
 
             if(star.planning(path_x, path_y, startPose.pose, goalPoseStamp.pose, costmap)){
