@@ -65,14 +65,14 @@
 
     <node name="astar_planning_node" pkg="eg_planner" type="astar_planning_node" output="screen">
         <rosparam command="load" file="$(find eg_navigation)/config/astar_planning.yaml" />
-        <remap from="astar_plannnig_node/goal" to="targetWpPose"/>
-        <remap from="astar_plannnig_node/costmap" to="costmap_node/merged_costmap"/>
+        <remap from="astar_planning_node/goal" to="targetWpPose"/>
+        <remap from="astar_planning_node/costmap" to="costmap_node/merged_costmap"/>
     </node>
 
     <node name="lane_planner" pkg="eg_planner" type="lane_planner">
         <rosparam file="$(find eg_navigation)/config/lane_planner.yaml" command="load" />
         <remap from="lane_planner/costmap" to="costmap_node/my_costmap/costmap"/>
-        <remap from="path" to="astar_plannnig_node/path"/>
+        <remap from="path" to="astar_planning_node/path"/>
         <remap from="robot_now_vel" to="cmd_vel"/>
     </node>
 

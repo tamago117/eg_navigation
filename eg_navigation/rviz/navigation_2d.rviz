@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /TF1/Frames1
+        - /planningPath1
       Splitter Ratio: 0.5
     Tree Height: 230
   - Class: rviz/Selection
@@ -391,7 +392,7 @@ Visualization Manager:
       Radius: 0.029999999329447746
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
-      Topic: /astar_plannnig_node/path
+      Topic: /astar_planning_node/path
       Unreliable: false
       Value: true
     - Class: rviz/Marker
@@ -430,16 +431,16 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 37.97108459472656
+      Distance: 41.915218353271484
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 3.208054542541504
-        Y: -2.752836227416992
-        Z: -14.966286659240723
+        X: 5.151655673980713
+        Y: -2.5302908420562744
+        Z: -14.467635154724121
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
@@ -467,6 +468,6 @@ Window Geometry:
     collapsed: false
   Width: 1299
   X: 406
-  Y: 119
+  Y: 82
   modeSelect:
     collapsed: false

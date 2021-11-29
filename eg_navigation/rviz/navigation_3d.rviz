@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Grid1
         - /TF1/Frames1
+        - /planningPath1
       Splitter Ratio: 0.5
     Tree Height: 449
   - Class: rviz/Selection
@@ -169,8 +170,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 1.10511314868927
-        Min Value: -0.8689761161804199
+        Max Value: -0.5382509231567383
+        Min Value: -0.9031674265861511
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -401,7 +402,7 @@ Visualization Manager:
       Radius: 0.029999999329447746
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
-      Topic: /astar_plannnig_node/path
+      Topic: /astar_planning_node/path
       Unreliable: false
       Value: true
     - Class: rviz/Marker
@@ -496,25 +497,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 23.931421279907227
+      Distance: 49.070640563964844
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.49864518642425537
-        Y: 7.412917137145996
-        Z: -1.7281079292297363
+        X: 1.2648066282272339
+        Y: 5.798855304718018
+        Z: -0.4813229739665985
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.06479766219854355
+      Pitch: 0.9047970771789551
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.355395555496216
+      Yaw: 3.2503936290740967
     Saved: ~
 Window Geometry:
   Displays:

@@ -93,10 +93,10 @@ int main(int argc, char** argv)
     pnh.param<std::string>("map_frame_id", map_id, "map");
     pnh.param<std::string>("base_link_frame_id", base_link_id, "base_link");
 
-    ros::Subscriber goalPose_sub = nh.subscribe("astar_plannnig_node/goal", 50, poseStamp_callback);
-    ros::Subscriber cost_sub = nh.subscribe("astar_plannnig_node/costmap", 10, cost_callback);
-    ros::Subscriber planningStop_sub = nh.subscribe("astar_plannnig_node/planning_stop", 1, planningStop_callback);
-    ros::Publisher path_pub = nh.advertise<nav_msgs::Path>("astar_plannnig_node/path", 10);
+    ros::Subscriber goalPose_sub = nh.subscribe("astar_planning_node/goal", 50, poseStamp_callback);
+    ros::Subscriber cost_sub = nh.subscribe("astar_planning_node/costmap", 10, cost_callback);
+    ros::Subscriber planningStop_sub = nh.subscribe("astar_planning_node/planning_stop", 1, planningStop_callback);
+    ros::Publisher path_pub = nh.advertise<nav_msgs::Path>("astar_planning_node/path", 10);
     ros::Publisher bool_pub = nh.advertise<std_msgs::Bool>("astar_planning_node/successPlan", 10);
 
     ctr::a_star star(resolution, costmapThreshold, heuristic_gain);
