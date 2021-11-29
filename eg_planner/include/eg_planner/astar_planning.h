@@ -193,7 +193,7 @@ int a_star::getCost(double x, double y)
     if(data_pos > 0 && data_pos < costmap.data.size()){
         return costmap.data[data_pos];
     }else{
-        return -INFINITY;
+        return std::numeric_limits<int>::min();
     }
 }
 

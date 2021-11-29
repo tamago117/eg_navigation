@@ -63,28 +63,12 @@
         <remap from="costmap_node/merged_costmap" to="costmap_node/merged_costmap" />
     </node>
 
-    <node name="astar_planning_node" pkg="eg_planner" type="astar_planning_node" output="screen">
-        <rosparam command="load" file="$(find eg_navigation)/config/astar_planning.yaml" />
-        <remap from="astar_plannnig_node/goal" to="targetWpPose"/>
-        <remap from="astar_plannnig_node/costmap" to="costmap_node/merged_costmap"/>
-    </node>
 
-    <node name="lane_planner" pkg="eg_planner" type="lane_planner">
-        <rosparam file="$(find eg_navigation)/config/lane_planner.yaml" command="load" />
-        <remap from="lane_planner/costmap" to="costmap_node/my_costmap/costmap"/>
-        <remap from="path" to="astar_plannnig_node/path"/>
-        <remap from="robot_now_vel" to="cmd_vel"/>
-    </node>
-
-    <node name="pure_posePursuit" pkg="eg_track" type="pure_posePursuit">
-        <param name="base_link_frame_id" value="base_foot_point"/>
-        <param name="map_frame_id" value="map"/>
-        <param name="loop_rate" value="30"/>
-        <param name="maxVelocity" value="1.0"/>
-        <param name="minVelocity" value="0.0"/>
-        <param name="max_angular_vel" value="0.5"/>
-        <param name="maxCurvature" value="3"/>
-        <remap from="pure_posePursuit/pose_in" to="lane_planner/pose_out"/>
+    <node name="dwa_path_plan" pkg="eg_planner" type="dwa_path_plan" output="screen">
+        <rosparam command="load" file="$(find eg_navigation)/config/dwa.yaml" />
+        <remap from="dwa_path_plan/goal" to="targetWp"/>
+        <remap from="dwa_path_plan/costmap" to="costmap_node/my_costmap/costmap"/>
+        <remap from="path" to="wayPoint/path"/>
     </node>
 
 
@@ -112,7 +96,7 @@
         <param name="loop_rate" value="30"/>
         <remap from="twist_maneger/targetWpPose_in" to="targetWpPose"/>
         <remap from="twist_maneger/targetPose_in" to="lane_planner/pose_out"/>
-        <remap from="cmd_vel" to="pure_posePursuit/cmd_vel"/>
+        <remap from="cmd_vel" to="dwa_path_plan/cmd_vel"/>
         <remap from="waypoint/now" to="targetWp"/>
     </node>
     <!--safety function-->
@@ -126,7 +110,7 @@
      </node>
 
     <!--rviz-->
-    <arg name="rvizconfig" default="$(find eg_navigation)/rviz/navigation_2d.rviz" />
+    <arg name="rvizconfig" default="$(find eg_navigation)/rviz/navigation_2d_dwa.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" respawn="true" />
 
 </launch>

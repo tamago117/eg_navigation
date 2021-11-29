@@ -308,9 +308,9 @@ double DWA::obstacleCost(const std::vector<motionState> trajectory)
 
         if(cost > maxCost){
             maxCost = cost;
-            /*if(maxCost == 100 || maxCost == 99){
+            if(maxCost >= 90){
                 return INFINITY;
-            }*/
+            }
         }
     }
 

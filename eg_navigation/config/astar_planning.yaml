@@ -1,4 +1,4 @@
-base_link_frame_id : base_foot_point
+base_link_frame_id : base_link
 map_frame_id : map
 loop_rate : 10
 heuristic_gain : 1.0

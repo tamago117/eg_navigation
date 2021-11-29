@@ -59,9 +59,9 @@ int main(int argc, char** argv)
     pnh.param<double>("loop_rate", rate, 100);
 
     ros::Publisher path_pub = nh.advertise<nav_msgs::Path>("dwa_path_plan/trajectory", 10);
-    ros::Publisher cmd_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 10);
-    ros::Subscriber targetWp_sub = nh.subscribe("targetWp", 50, targetWp_callback);
-    ros::Subscriber path_sub = nh.subscribe("wayPoint/path", 50, path_callback);
+    ros::Publisher cmd_pub = nh.advertise<geometry_msgs::Twist>("dwa_path_plan/cmd_vel", 10);
+    ros::Subscriber targetWp_sub = nh.subscribe("dwa_path_plan/goal", 50, targetWp_callback);
+    ros::Subscriber path_sub = nh.subscribe("path", 50, path_callback);
     ros::Subscriber cost_sub = nh.subscribe("dwa_path_plan/costmap", 10, cost_callback);
 
     ros::Rate loop_rate(rate);
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
 
 
         if(is_path_topic && is_costmap_topic){
-            //path planning by dynamic window approach
+            //local path planning by dynamic window approach
             dwa.dwa_controll(nowState, path.poses[targetWp].pose, costmap);
             dwa.get_result(cmd_vel, trajectory);
 
