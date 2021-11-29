@@ -1,21 +1,25 @@
 mcl_3dl:
   map_frame: "map"
   accum_cloud: 2
-  lpf_step: 1.0
-  dist_weight_z: 2.0
-  odom_err_lin_lin: 0.3
-  odom_err_lin_ang: 0.07
-  odom_err_ang_lin: 0.1 #0.1
-  odom_err_ang_ang: 0.25 #0.1
-  odom_err_integ_lin_tc: 20.0 #0.1
+  lpf_step: 0.9
+  dist_weight_x: 1.0
+  dist_weight_y: 1.0
+  dist_weight_z: 5.0
+  odom_err_lin_lin: 0.1
+  odom_err_lin_ang: 0.05
+  odom_err_ang_lin: 0.05 #0.1
+  odom_err_ang_ang: 0.1 #0.1
+  odom_err_integ_lin_tc: 15.0 #0.1
   odom_err_integ_lin_sigma: 100.0 #10.0
-  odom_err_integ_ang_tc: 20 #0.1
+  odom_err_integ_ang_tc: 15 #0.1
   odom_err_integ_ang_sigma: 100.0 #10.0
   likelihood:
-    match_dist_min: 0.5
-    match_output_dist: 0.3
+    match_dist_min: 0.4
+    match_output_dist: 0.05
+    clip_near: 2.0
+    clip_far: 30.0
     num_points: 1000
-    num_points_global: 500
+    num_points_global: 350
   beam:
     clip_far: 100.0
     clip_near: 5.0

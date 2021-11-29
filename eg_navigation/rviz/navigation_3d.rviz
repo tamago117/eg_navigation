@@ -4,6 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Grid1
         - /TF1/Frames1
       Splitter Ratio: 0.5
     Tree Height: 449
@@ -48,7 +49,7 @@ Visualization Manager:
       Offset:
         X: 0
         Y: 0
-        Z: 0
+        Z: -0.800000011920929
       Plane: XY
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
@@ -168,8 +169,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 0.46759161353111267
-        Min Value: -0.564627468585968
+        Max Value: 1.10511314868927
+        Min Value: -0.8689761161804199
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -196,14 +197,14 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
+        Max Value: 17.54906463623047
+        Min Value: -1.616658091545105
         Value: true
       Axis: Z
       Channel Name: intensity
       Class: rviz/PointCloud2
       Color: 255; 255; 255
-      Color Transformer: Intensity
+      Color Transformer: AxisColor
       Decay Time: 0
       Enabled: false
       Invert Rainbow: false
@@ -214,7 +215,7 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.029999999329447746
+      Size (m): 0.10000000149011612
       Style: Flat Squares
       Topic: /velodyne_points
       Unreliable: false
@@ -460,7 +461,7 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.07000000029802322
+      Size (m): 0.10000000149011612
       Style: Flat Squares
       Topic: /mcl_3dl/matched
       Unreliable: false
@@ -495,25 +496,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 61.517520904541016
+      Distance: 23.931421279907227
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 27.496055603027344
-        Y: 36.86960220336914
-        Z: -11.62450122833252
+        X: -0.49864518642425537
+        Y: 7.412917137145996
+        Z: -1.7281079292297363
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5097966194152832
+      Pitch: 0.06479766219854355
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.0803911685943604
+      Yaw: 3.355395555496216
     Saved: ~
 Window Geometry:
   Displays:

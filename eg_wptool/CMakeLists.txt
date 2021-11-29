@@ -182,6 +182,11 @@ target_link_libraries(wpSelect
   ${catkin_LIBRARIES}
 )
 
+add_executable(wpIdentify   src/wpIdentify.cpp)
+target_link_libraries(wpIdentify
+  ${catkin_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############

@@ -1,6 +1,6 @@
 <launch>
     <!--<arg name="map_pcd" value="$(find eg_navigation)/resources/pcd/clearpath.pcd" />-->
-    <arg name="map_pcd" value="$(find eg_navigation)/resources/pcd/autoware.pcd" />
+    <arg name="map_pcd" value="$(find eg_navigation)/resources/pcd/daigaku.pcd" />
     
 
     <node pkg="pcl_ros" type="pcd_to_pointcloud" name="pcd_to_pointcloud"

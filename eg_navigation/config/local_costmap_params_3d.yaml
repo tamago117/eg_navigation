@@ -33,3 +33,6 @@ my_costmap:
   inflation_layer:
     inflation_radius: 2
     cost_scaling_factor : 5
+
+path_costmap:
+    cost_path_width: 30.0

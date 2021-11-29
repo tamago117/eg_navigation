@@ -105,10 +105,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES eg_mixed
-#  CATKIN_DEPENDS roscpp rospy std_msgs tf2_ros
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES eg_mixed
+  CATKIN_DEPENDS roscpp rospy std_msgs tf2_ros
+  DEPENDS system_lib
 )
 
 ###########
@@ -118,7 +118,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+ include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -164,6 +164,16 @@ target_link_libraries(laser2pc
 
 add_executable(costmap_node   src/costmap_node.cpp)
 target_link_libraries(costmap_node
+  ${catkin_LIBRARIES}
+)
+
+add_executable(path_costmap   src/path_costmap.cpp)
+target_link_libraries(path_costmap
+  ${catkin_LIBRARIES}
+)
+
+add_executable(costmap_merger   src/costmap_merger.cpp)
+target_link_libraries(costmap_merger
   ${catkin_LIBRARIES}
 )
 
