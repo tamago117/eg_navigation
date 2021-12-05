@@ -10,6 +10,7 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <std_msgs/ColorRGBA.h>
+#include <std_msgs/Bool.h>
 #include <tf/transform_broadcaster.h>
 #include "eg_planner/tf_position.h"
 
@@ -32,6 +33,14 @@ void odom_callback(const nav_msgs::Odometry& odom_message)
 {
     odom = odom_message;
 }
+
+bool planning_stop = false;
+void planningStop_callback(const std_msgs::Bool planningStop_message)
+{
+    planning_stop = planningStop_message.data;
+}
+
+
 
 std_msgs::ColorRGBA set_color(double r, double g, double b, double a)
 {
@@ -166,6 +175,7 @@ int main(int argc, char** argv)
     ros::Subscriber path_sub = nh.subscribe("path", 50, path_callback);
     ros::Subscriber cost_sub = nh.subscribe("lane_planner/costmap", 10, cost_callback);
     ros::Subscriber odom_sub = nh.subscribe("odom", 10, odom_callback);
+    ros::Subscriber planningStop_sub = nh.subscribe("lane_planner/planning_stop", 1, planningStop_callback);
     ros::Publisher pose_pub = nh.advertise<geometry_msgs::Pose>("lane_planner/pose_out", 10);
     ros::Publisher marker_pub = nh.advertise<visualization_msgs::MarkerArray>("lane_planner/marker_array", 10);
 
@@ -175,6 +185,21 @@ int main(int argc, char** argv)
 
     while(ros::ok())
     {
+        //planning stop
+        if(planning_stop){
+            geometry_msgs::Pose pose;
+            pose.position.x = path.poses.back().pose.position.x;
+            pose.position.y = path.poses.back().pose.position.y;
+            pose.position.z = path.poses.back().pose.position.z;
+            pose.orientation = path.poses.back().pose.orientation;
+            pose_pub.publish(pose);
+
+            ros::spinOnce();
+            loop_rate.sleep();
+
+            continue;
+        }
+
         if(path.poses.size() > 0){
             //change targer pose interval following to robot velocity
             double target_interval = ((1-distance_rate)*disTarget_maxVel/maxVel)*abs(odom.twist.twist.linear.x) + distance_rate*disTarget_maxVel;
@@ -273,7 +298,7 @@ int main(int argc, char** argv)
                 marker_array.markers[i].header.stamp = ros::Time::now();
                 marker_array.markers[i].ns = "plannig_point";
                 marker_array.markers[i].id = i;
-                marker_array.markers[i].lifetime = ros::Duration();
+                marker_array.markers[i].lifetime = ros::Duration(1.0);
 
                 marker_array.markers[i].type = visualization_msgs::Marker::ARROW;
                 marker_array.markers[i].action = visualization_msgs::Marker::ADD;
