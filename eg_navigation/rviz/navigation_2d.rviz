@@ -344,7 +344,7 @@ Visualization Manager:
       Enabled: true
       Foreground Alpha: 0.800000011920929
       Foreground Color: 25; 255; 240
-      Name: String
+      Name: mode
       Overtake Color Properties: false
       Overtake Position Properties: true
       Topic: /mode
@@ -468,6 +468,6 @@ Window Geometry:
     collapsed: false
   Width: 1299
   X: 406
-  Y: 82
+  Y: 45
   modeSelect:
     collapsed: false

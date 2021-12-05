@@ -105,6 +105,7 @@ int main(int argc, char** argv)
             if(targetWp > i){
                 marker.color = gray;
             }
+            //target
             if(targetWp == i){
                 marker.color = red;
             }
@@ -112,9 +113,10 @@ int main(int argc, char** argv)
                 marker.color = green;
             }
             //stop marker
-            if(mode_array.data.at(i) == (uint8_t)robot_status::stop){
+            if(mode_array.data[i] == (uint8_t)robot_status::stop){
                 marker.color = blue;
             }
+            
             markerText.color = black;
 
             marker_array.markers.push_back(marker);

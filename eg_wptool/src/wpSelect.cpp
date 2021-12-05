@@ -13,6 +13,7 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Pose.h>
 #include <nav_msgs/Path.h>
+#include <std_msgs/UInt8MultiArray.h>
 #include <string>
 #include "eg_wptool/tf_position.h"
 #include "eg_wptool/robot_status.h"
@@ -45,11 +46,23 @@ void path_callback(const nav_msgs::Path path_message)
     path = path_message;
 }
 
+std_msgs::UInt8MultiArray mode_array;
+void wpMode_callback(const std_msgs::UInt8MultiArray& modeArray_message)
+{
+    mode_array = modeArray_message;
+}
+
 bool isSuccessPlanning = true;
 int failedPlanCount = 0;
 void successPlan_callback(const std_msgs::Bool successPlan_message)
 {
     isSuccessPlanning = successPlan_message.data;
+}
+
+std_msgs::String mode_in;
+void mode_callback(const std_msgs::String& mode_message)
+{
+    mode_in = mode_message;
 }
 
 int main(int argc, char** argv)
@@ -74,7 +87,9 @@ int main(int argc, char** argv)
     tf_position nowPosition(map_id, base_link_id, rate);
 
     ros::Subscriber path_sub = nh.subscribe("path", 50, path_callback);
+    ros::Subscriber wpMode_sub = nh.subscribe("wayPoint/mode", 10, wpMode_callback);
     ros::Subscriber successPlan_sub = nh.subscribe("successPlan", 10, successPlan_callback);
+    ros::Subscriber mode_sub = nh.subscribe("mode", 10 , mode_callback);
     ros::Publisher tarWp_pub = nh.advertise<std_msgs::Int32>("targetWp", 10);
     ros::Publisher tarPos_pub = nh.advertise<geometry_msgs::PoseStamped>("targetWpPose", 10);
     ros::Publisher mode_pub = nh.advertise<std_msgs::String>("mode_select/mode", 10);
@@ -84,10 +99,8 @@ int main(int argc, char** argv)
     bool trace_wp_mode = true;
     std_msgs::Int32 targetWp;
 
-    std_msgs::String mode;
-    mode.data = robot_status_str(robot_status::angleAdjust);
-
-    bool isReach = false;
+    std_msgs::String mode_out;
+    mode_out.data = robot_status_str(robot_status::angleAdjust);
 
     targetWp.data = 0;
 
@@ -112,18 +125,24 @@ int main(int argc, char** argv)
                     if(targetWp.data >= (path.poses.size()-1)){
                         break;
                     }
+                    //stop point
+                    if(mode_array.data.at(targetWp.data) == (uint8_t)robot_status::stop){
+                        break;
+                    }
                     targetWp.data++;
                 }
             }
 
             //angle adjust at specific wp
-            if(targetWp.data >= (path.poses.size()-1)){
-                //distance
-                if(!isReach){
-                    if(poseStampDistance(path.poses[targetWp.data], nowPosition.getPoseStamped()) <= fin_tar_deviation){
-                        //isReach = true;
-                        mode_pub.publish(mode);
+            //distance
+            if(not(mode_in.data==robot_status_str(robot_status::angleAdjust) and mode_in.data==robot_status_str(robot_status::stop))){
+                if(poseStampDistance(path.poses[targetWp.data], nowPosition.getPoseStamped()) <= fin_tar_deviation){
+                    mode_pub.publish(mode_out);
+
+                    if(!(targetWp.data >= (path.poses.size()-1))){
+                        targetWp.data++;
                     }
+
                 }
             }
 
