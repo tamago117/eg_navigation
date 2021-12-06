@@ -13,5 +13,5 @@ obstacleCost_gain : 0.4
 robot_stuck_value : 0.001
 
 map_frame_id : map
-base_link_frame_id : base_foot_point
+base_link_frame_id : base_link
 loop_rate : 20

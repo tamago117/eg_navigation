@@ -38,12 +38,12 @@
         <param name="markerSize" value="5.0"/>
     </node>
     <node name="wpSelect" pkg="eg_wptool" type="wpSelect">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
-        <param name="maxVelocity" value="0.7"/>
+        <param name="maxVelocity" value="1.0"/>
         <param name="loop_rate" value="20"/>
         <param name="target_deviation" value="1.5"/>
-        <param name="final_target_deviation" value="0.4"/>
+        <param name="final_target_deviation" value="0.5"/>
         <param name="failed_target_deviation_rate" value="4.0"/>
         <remap from="path" to="wayPoint/path"/>
         <remap from="successPlan" to="astar_planning_node/successPlan"/>
@@ -76,11 +76,11 @@
     </node>
 
     <node name="pure_posePursuit" pkg="eg_track" type="pure_posePursuit">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="30"/>
-        <param name="maxVelocity" value="1.0"/>
-        <param name="minVelocity" value="0.1"/>
+        <param name="maxVelocity" value="1.5"/>
+        <param name="minVelocity" value="0.0"/>
         <param name="max_angular_vel" value="0.5"/>
         <param name="maxCurvature" value="4"/>
         <remap from="pure_posePursuit/pose_in" to="lane_planner/pose_out"/>
@@ -88,7 +88,7 @@
 
 
     <node name="wpBack_recovery" pkg="eg_safety" type="wpBack_recovery" output="screen">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="20"/>
         <param name="linear_vel" value="-0.3"/>
@@ -106,7 +106,7 @@
     </node>-->
 
     <node name="twist_maneger" pkg="eg_navigation" type="twist_maneger">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="30"/>
         <remap from="twist_maneger/targetWpPose_in" to="targetWpPose"/>

@@ -177,6 +177,11 @@ target_link_libraries(costmap_merger
   ${catkin_LIBRARIES}
 )
 
+add_executable(floor_tf_broadcaster   src/floor_tf_broadcaster.cpp)
+target_link_libraries(floor_tf_broadcaster
+  ${catkin_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############

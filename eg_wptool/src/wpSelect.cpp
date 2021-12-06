@@ -23,9 +23,10 @@ double poseStampDistance(const geometry_msgs::PoseStamped& pose1, const geometry
 {
     double diffX = pose1.pose.position.x - pose2.pose.position.x;
     double diffY = pose1.pose.position.y - pose2.pose.position.y;
-    double diffZ = pose1.pose.position.z - pose2.pose.position.z;
+    //double diffZ = pose1.pose.position.z - pose2.pose.position.z;
 
-    return sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
+    //return sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
+    return sqrt(diffX * diffX + diffY * diffY);
 }
 
 template<class T> T constrain(T num, double minVal, double maxVal)

@@ -3,25 +3,22 @@
     <arg name="generate_test_bag" default="false" />
     <arg name="mcl_3dl_config" default="$(find eg_navigation)/config/mcl_3dl.yaml"/>
 
-
-    <!--odometry-->
-    <!--<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-        <rosparam command="load" file="$(find tvc_navigation)/config/ekf_localization/model1.yaml" />
-        <remap from="odometry/filtered" to="fusion/odom" />
-    </node>-->
-
-    <rosparam command="load" file="$(arg mcl_3dl_config)"/>
+    <!--<rosparam command="load" file="$(arg mcl_3dl_config)"/>
     <node pkg="mcl_3dl" type="mcl_3dl" name="mcl_3dl" output="screen" unless="$(arg generate_test_bag)" respawn="true">
         <param name="compatible" value="1" />
         <remap from="cloud" to="velodyne_points" />
         <remap from="odom" to="diff_drive_controller/odom"/>
-    </node>
+    </node>-->
     <!--map generate-->
-    <node pkg="pcl_ros" type="pcd_to_pointcloud" name="pcd_to_pointcloud"
+    <!--<node pkg="pcl_ros" type="pcd_to_pointcloud" name="pcd_to_pointcloud"
     args="$(arg map_pcd)" >
         <param name="frame_id" value="map" />
         <param name="latch" value="true"/>
         <remap from="cloud_pcd" to="mapcloud" />
-    </node>
+    </node>-->
+
+    <include file="$(find eg_navigation)/launch/hdl_localization.launch">
+        <arg name="map_pcd" value = "$(arg map_pcd)"/>
+    </include>
 
 </launch>
