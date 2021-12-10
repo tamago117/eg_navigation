@@ -66,6 +66,12 @@ void mode_callback(const std_msgs::String& mode_message)
     mode_in = mode_message;
 }
 
+std_msgs::Int32 targetWp;
+void wayPoint_set_callback(const std_msgs::Int32 wpset_message)
+{
+    targetWp = wpset_message;
+}
+
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "wpControll");
@@ -91,6 +97,7 @@ int main(int argc, char** argv)
     ros::Subscriber wpMode_sub = nh.subscribe("wayPoint/mode", 10, wpMode_callback);
     ros::Subscriber successPlan_sub = nh.subscribe("successPlan", 10, successPlan_callback);
     ros::Subscriber mode_sub = nh.subscribe("mode", 10 , mode_callback);
+    ros::Subscriber wpSet_sub = nh.subscribe("wayPoint/set", 10, wayPoint_set_callback);
     ros::Publisher tarWp_pub = nh.advertise<std_msgs::Int32>("targetWp", 10);
     ros::Publisher tarPos_pub = nh.advertise<geometry_msgs::PoseStamped>("targetWpPose", 10);
     ros::Publisher mode_pub = nh.advertise<std_msgs::String>("mode_select/mode", 10);
@@ -98,8 +105,6 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(rate);
 
     bool trace_wp_mode = true;
-    std_msgs::Int32 targetWp;
-
     std_msgs::String mode_out;
     mode_out.data = robot_status_str(robot_status::angleAdjust);
 

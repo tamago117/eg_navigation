@@ -21,7 +21,7 @@
 #include "eg_wptool/tf_position.h"
 
 nav_msgs::Path path;
-void path_callback(const nav_msgs::Path path_message)
+void path_callback(const nav_msgs::Path& path_message)
 {
     path = path_message;
 }
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 
     tf_position nowPosition(map_id, base_link_id, rate);
 
-    ros::Subscriber path_sub = nh.subscribe("path", 50, path_callback);
+    ros::Subscriber path_sub = nh.subscribe("wayPoint/path", 50, path_callback);
 
     ros::Rate loop_rate(rate);
 

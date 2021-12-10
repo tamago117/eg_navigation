@@ -128,4 +128,6 @@
     <arg name="rvizconfig" default="$(find eg_navigation)/rviz/navigation_3d.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" respawn="true" />
 
+    <node name="wpInitialPose" pkg="eg_wptool" type="wpInitialPose"/>
+
 </launch>

@@ -187,6 +187,11 @@ target_link_libraries(wpIdentify
   ${catkin_LIBRARIES}
 )
 
+add_executable(wpInitialPose   src/wpInitialPose.cpp)
+target_link_libraries(wpInitialPose
+  ${catkin_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############

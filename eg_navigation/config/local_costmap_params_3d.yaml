@@ -22,7 +22,7 @@ my_costmap:
       sensor_frame: velodyne
       topic: velodyne_points
       data_type: PointCloud2
-      min_obstacle_height : 0.4
+      min_obstacle_height : 0.3
       #sensor_frame: floor
       #topic: mapcloud
       #data_type: PointCloud2
