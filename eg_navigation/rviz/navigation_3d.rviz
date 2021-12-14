@@ -262,6 +262,8 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
+        base_foot_point:
+          {}
         map:
           floor:
             {}
@@ -501,25 +503,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 18.679790496826172
+      Distance: 8.216078758239746
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -1.6883025169372559
-        Y: 2.3523075580596924
-        Z: 6.612737655639648
+        X: -3.222468376159668
+        Y: 1.0917130708694458
+        Z: 4.841915130615234
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.9897968769073486
+      Pitch: 0.7297971248626709
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.645392417907715
+      Yaw: 3.1903884410858154
     Saved: ~
 Window Geometry:
   Displays:

@@ -27,6 +27,8 @@ int main(int argc, char** argv)
 
     ros::Subscriber costmapReset_sub = nh.subscribe("costmap_node/my_costmap/costmap_reset", 1, costmapReset_callback);
 
+    costmap_2d::Costmap2DConfig config;
+
     ros::Rate loop_rate(10);
     while(ros::ok())
     {

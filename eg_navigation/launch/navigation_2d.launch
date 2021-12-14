@@ -40,7 +40,7 @@
         <remap from="path" to="wayPoint/path"/>
     </node>-->
     <node name="wpSelect" pkg="eg_wptool" type="wpSelect">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="maxVelocity" value="0.7"/>
         <param name="loop_rate" value="20"/>
@@ -54,7 +54,7 @@
     <node pkg="eg_mixed" type="costmap_node" name="costmap_node">
         <rosparam command="load" file="$(find eg_navigation)/config/local_costmap_params_2d.yaml" />
     </node>
-    <node name="path_costmap" pkg="eg_mixed" type="path_costmap" >
+    <node name="path_costmap" pkg="eg_mixed" type="path_costmap" output="screen">
         <rosparam command="load" file="$(find eg_navigation)/config/local_costmap_params_2d.yaml" />
     </node>
     <node name="costmap_merger" pkg="eg_mixed" type="costmap_merger" >
@@ -77,7 +77,7 @@
     </node>
 
     <node name="pure_posePursuit" pkg="eg_track" type="pure_posePursuit">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="30"/>
         <param name="maxVelocity" value="1.0"/>
@@ -89,7 +89,7 @@
 
 
     <node name="wpBack_recovery" pkg="eg_safety" type="wpBack_recovery" output="screen">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="20"/>
         <param name="linear_vel" value="-0.3"/>
@@ -107,7 +107,7 @@
     </node>-->
 
     <node name="twist_maneger" pkg="eg_navigation" type="twist_maneger">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="30"/>
         <remap from="twist_maneger/targetWpPose_in" to="targetWpPose"/>
