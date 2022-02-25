@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 
 <launch>
-    <!--<arg name="way_file" default="way1_3d.csv"/>-->
-    <arg name="way_file" default="way_autoware.csv"/>
+    <arg name="way_file" default="way1_3d.csv"/>
+    <!--<arg name="way_file" default="way_autoware.csv"/>-->
 
     <arg name="sim" default="true"/>
-    <!--<arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>-->
-    <arg name="world_name" default="$(find eg_navigation)/worlds/autoware.world"/>
-    <!--<arg name="map_pcd" value = "$(find eg_navigation)/resources/pcd/clearpath.pcd"/>-->
-    <arg name="map_pcd" value = "$(find eg_navigation)/resources/pcd/autoware.pcd"/>
+    <arg name="world_name" default="$(find eg_navigation)/worlds/clearpath_playpen.world"/>
+    <!--<arg name="world_name" default="$(find eg_navigation)/worlds/autoware.world"/>-->
+    <arg name="map_pcd" value = "$(find eg_navigation)/resources/pcd/clearpath.pcd"/>
+    <!--<arg name="map_pcd" value = "$(find eg_navigation)/resources/pcd/autoware.pcd"/>-->
     <arg name="model" default="$(find eg_navigation)/robots/naviton_3d.urdf.xacro" />
 
     <!--gazebo-->

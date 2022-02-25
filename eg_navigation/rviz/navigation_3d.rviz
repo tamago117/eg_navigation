@@ -4,11 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Global Options1
-        - /Grid1
         - /TF1/Frames1
-        - /planningPath1
-        - /TargetVisualizer1
       Splitter Ratio: 0.5
     Tree Height: 449
   - Class: rviz/Selection
@@ -262,8 +258,6 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        base_foot_point:
-          {}
         map:
           floor:
             {}
@@ -503,25 +497,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 8.216078758239746
+      Distance: 13.321999549865723
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -3.222468376159668
-        Y: 1.0917130708694458
-        Z: 4.841915130615234
+        X: -2.4492735862731934
+        Y: 0.9475826621055603
+        Z: 5.092353343963623
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7297971248626709
+      Pitch: 1.1897966861724854
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.1903884410858154
+      Yaw: 2.3053860664367676
     Saved: ~
 Window Geometry:
   Displays:
@@ -539,7 +533,7 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1920
-  X: 0
+  X: 1920
   Y: 0
   modeSelect:
     collapsed: false
