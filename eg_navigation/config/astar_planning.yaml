@@ -1,6 +1,6 @@
 base_link_frame_id : base_link
 map_frame_id : map
-loop_rate : 10
+loop_rate : 5
 heuristic_gain : 1.0
 resolution : 0.1
 costmapThreshold : 90

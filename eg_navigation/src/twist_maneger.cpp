@@ -97,6 +97,7 @@ int main(int argc, char** argv)
     mode.data = robot_status_str(robot_status::stop);
 
     bool run_init = true;
+    bool angleAdjustfinish = true;
     bool recovery_init = false;
 
     std_msgs::Float32 vel, yawVel;
@@ -125,12 +126,15 @@ int main(int argc, char** argv)
         }
         //angle adjust
         if(mode.data == robot_status_str(robot_status::angleAdjust)){
+            angleAdjustfinish = false;
+
             double diffAngle = arrangeAngle(quat2yaw(targetWpPose.pose.orientation) - nowPosition.getYaw());
 
             cmd_vel.linear.x = 0;
             cmd_vel.angular.z = diffAngle * 1.5;
             if(abs(diffAngle) < 1*M_PI/180){
                 mode.data = robot_status_str(robot_status::stop);
+                angleAdjustfinish = true;
             }
         }
         //safety stop
@@ -140,8 +144,10 @@ int main(int argc, char** argv)
         //end safety stop
         if(recovery_mode.data == robot_status_str(robot_status::run) && mode.data == robot_status_str(robot_status::safety_stop)){
             mode.data = robot_status_str(robot_status::run);
+            if(not(angleAdjustfinish)){
+                mode.data = robot_status_str(robot_status::angleAdjust);
+            }
         }
-
         //recovery mode
         if(recovery_mode.data == robot_status_str(robot_status::recovery)){
             recovery_init = true;

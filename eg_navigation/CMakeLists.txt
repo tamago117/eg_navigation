@@ -156,6 +156,11 @@ target_link_libraries(twist_maneger
   ${catkin_LIBRARIES}
 )
 
+add_executable(state_maneger   src/state_maneger.cpp)
+target_link_libraries(state_maneger
+  ${catkin_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############

@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     geometry_msgs::PoseStamped pose;
     
 
-    ros::Rate loop_rate(1);
+    ros::Rate loop_rate(5);
     while(ros::ok())
     {
         std_msgs::UInt8MultiArray mode_array;

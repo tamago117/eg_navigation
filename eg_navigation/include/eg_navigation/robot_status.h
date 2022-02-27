@@ -31,7 +31,7 @@ std::string robot_status_str(robot_status status)
         case(robot_status::speed_up):
             return "speed_up";
         case(robot_status::tracking):
-            return "recovery";
+            return "tracking";
         default:
             return "";
     }

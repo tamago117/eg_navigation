@@ -53,7 +53,7 @@
     <node pkg="eg_mixed" type="costmap_node" name="costmap_node">
         <rosparam command="load" file="$(find eg_navigation)/config/local_costmap_params_3d.yaml" />
     </node>
-    <node name="path_costmap" pkg="eg_mixed" type="path_costmap" >
+    <node name="path_costmap" pkg="eg_mixed" type="path_costmap">
         <rosparam command="load" file="$(find eg_navigation)/config/local_costmap_params_3d.yaml" />
     </node>
     <node name="costmap_merger" pkg="eg_mixed" type="costmap_merger" >
@@ -113,6 +113,9 @@
         <remap from="twist_maneger/targetPose_in" to="lane_planner/pose_out"/>
         <remap from="cmd_vel" to="pure_posePursuit/cmd_vel"/>
         <remap from="waypoint/now" to="targetWp"/>
+    </node>
+    <node name="state_maneger" pkg="eg_navigation" type="state_maneger">
+        <param name="loop_rate" value="10"/>
     </node>
     <!--safety function-->
     <node pkg="eg_mixed" name="laser2pc" type="laser2pc"/>

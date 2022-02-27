@@ -19,6 +19,7 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <std_msgs/Float32.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Bool.h>
 #include <visualization_msgs/Marker.h>
 #include <string>
 #include <limits>
@@ -42,10 +43,12 @@ private:
     ros::Subscriber cmd_sub;
     ros::Subscriber pc2_sub;
     ros::Subscriber cost_sub;
+    ros::Subscriber recoveryStop_sub;
 
     //function
     pcl::PointCloud<pcl::PointXYZ>::Ptr pass_through(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, std::string iaxis, double imin, double imax);
     void cmd_callback(const geometry_msgs::Twist& cmd_message);
+    void recoveryStop_callback(const std_msgs::Bool recoveryStop_message);
     void callback_knn(const sensor_msgs::PointCloud2ConstPtr& pc2);
     void cost_callback(const nav_msgs::OccupancyGrid& costmap_message);
     int getCost(double x, double y);
@@ -67,6 +70,7 @@ private:
     int stop_count;
     geometry_msgs::Twist cmd_vel_limit;
     std_msgs::String mode;
+    std_msgs::Bool recovery_stop;
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr gfiltered;
     geometry_msgs::Twist cmd_vel;
@@ -84,6 +88,7 @@ safety_limit::safety_limit() :  stop_count(0)
     marker_pub = nh.advertise<visualization_msgs::Marker>("safety_limit/next_robot_position", 1);
     // subscriber
     cmd_sub = nh.subscribe("safety_limit/cmd_vel_in", 10, &safety_limit::cmd_callback, this);
+    recoveryStop_sub = nh.subscribe("safety_limit/recovery_stop", 10, &safety_limit::recoveryStop_callback, this);
     pc2_sub = nh.subscribe<sensor_msgs::PointCloud2>("laser2pc/pc2", 1, &safety_limit::callback_knn, this);
     cost_sub = nh.subscribe("safety_limit/costmap", 10, &safety_limit::cost_callback, this);
 
@@ -105,6 +110,7 @@ safety_limit::safety_limit() :  stop_count(0)
     pnh.param<std::string>("map_frame_id", map_id, "map");
     pnh.param<std::string>("base_link_frame_id", base_link_id, "base_link");
 
+    recovery_stop.data = false;
 }
 
 // pass through filter
@@ -124,6 +130,11 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr safety_limit::pass_through(pcl::PointCloud<p
 void safety_limit::cmd_callback(const geometry_msgs::Twist& cmd_message)
 {
     cmd_vel = cmd_message;
+}
+
+void safety_limit::recoveryStop_callback(const std_msgs::Bool recoveryStop_message)
+{
+    recovery_stop = recoveryStop_message;
 }
 
 // callback
@@ -236,13 +247,15 @@ void safety_limit::callback_knn(const sensor_msgs::PointCloud2ConstPtr& pc2){
                 mode.data = robot_status_str(robot_status::safety_stop);
 
                 //一定のカウントでrecoveryに入る
-                stop_count++;
-                if(stop_count > (int)(recovery_start_time*rate)){
-                    ROS_INFO("robot recovery behaviour");
-                    mode.data = robot_status_str(robot_status::recovery);
-                    //dt分recoveryをpublish
-                    if(stop_count > (int)((recovery_start_time+min_dt)*rate)){
-                        stop_count = 0;
+                if(not(recovery_stop.data)){
+                    stop_count++;
+                    if(stop_count > (int)(recovery_start_time*rate)){
+                        ROS_INFO("robot recovery behaviour");
+                        mode.data = robot_status_str(robot_status::recovery);
+                        //dt分recoveryをpublish
+                        if(stop_count > (int)((recovery_start_time+min_dt)*rate)){
+                            stop_count = 0;
+                        }
                     }
                 }
 

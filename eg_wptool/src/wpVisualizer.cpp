@@ -33,6 +33,7 @@ std_msgs::ColorRGBA set_color(double r, double g, double b, double a)
 std_msgs::ColorRGBA green = set_color(0.0, 1.0, 0.0, 1.0);
 std_msgs::ColorRGBA red = set_color(1.0, 0.0, 0.0, 1.0);
 std_msgs::ColorRGBA blue = set_color(0.0, 0.0, 1.0, 1.0);
+std_msgs::ColorRGBA purple = set_color(1.0, 0.0, 1.0, 1.0);
 std_msgs::ColorRGBA gray = set_color(0.3, 0.3, 0.3, 1.0);
 std_msgs::ColorRGBA black = set_color(0.0, 0.0, 0.0, 1.0);
 
@@ -70,7 +71,7 @@ int main(int argc, char** argv)
 
     double markerSize;
     pnh.param<double>("markerSize", markerSize, 1.0);
-    
+
     ros::Rate loop_rate(10);
 
     const double marker_diameter = 0.1*markerSize;
@@ -101,10 +102,6 @@ int main(int argc, char** argv)
             marker.pose = markerText.pose = path.poses.at(i).pose;
             markerText.pose.position.z+=marker_height;
             markerText.text= std::to_string(i).c_str();
-            //color select
-            if(targetWp > i){
-                marker.color = gray;
-            }
             //target
             if(targetWp == i){
                 marker.color = red;
@@ -116,7 +113,15 @@ int main(int argc, char** argv)
             if(mode_array.data[i] == (uint8_t)robot_status::stop){
                 marker.color = blue;
             }
-            
+            //column marker
+            if(mode_array.data[i] == (uint8_t)robot_status::column){
+                marker.color = purple;
+            }
+            //end target
+            if(targetWp > i){
+                marker.color = gray;
+            }
+
             markerText.color = black;
 
             marker_array.markers.push_back(marker);
