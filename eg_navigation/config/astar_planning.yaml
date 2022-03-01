@@ -1,9 +1,9 @@
-base_link_frame_id : base_foot_point
+base_link_frame_id : base_link
 map_frame_id : map
-loop_rate : 10
+loop_rate : 5
 heuristic_gain : 1.0
 resolution : 0.1
-costmapThreshold : 50
+costmapThreshold : 90
 approximationNode : 20
 approximationResolution : 10
 replanning_radius : 1

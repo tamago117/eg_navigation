@@ -36,8 +36,11 @@
         <remap from="path" to="wayPoint/path"/>
         <param name="markerSize" value="5.0"/>
     </node>
+   <!--<node name="wpIdentify" pkg="eg_wptool" type="wpIdentify" output="screen">
+        <remap from="path" to="wayPoint/path"/>
+    </node>-->
     <node name="wpSelect" pkg="eg_wptool" type="wpSelect">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="maxVelocity" value="0.7"/>
         <param name="loop_rate" value="20"/>
@@ -47,29 +50,38 @@
         <remap from="successPlan" to="astar_planning_node/successPlan"/>
     </node>
 
+    <!--costmap-->
     <node pkg="eg_mixed" type="costmap_node" name="costmap_node">
         <rosparam command="load" file="$(find eg_navigation)/config/local_costmap_params_2d.yaml" />
+    </node>
+    <node name="path_costmap" pkg="eg_mixed" type="path_costmap" >
+        <rosparam command="load" file="$(find eg_navigation)/config/local_costmap_params_2d.yaml" />
+    </node>
+    <node name="costmap_merger" pkg="eg_mixed" type="costmap_merger" >
+        <remap from="costmap_node/base_costmap" to="costmap_node/path_costmap" />
+        <remap from="costmap_node/sub_costmap" to="costmap_node/my_costmap/costmap" />
+        <remap from="costmap_node/merged_costmap" to="costmap_node/merged_costmap" />
     </node>
 
     <node name="astar_planning_node" pkg="eg_planner" type="astar_planning_node" output="screen">
         <rosparam command="load" file="$(find eg_navigation)/config/astar_planning.yaml" />
-        <remap from="astar_plannnig_node/goal" to="targetWpPose"/>
-        <remap from="astar_plannnig_node/costmap" to="costmap_node/my_costmap/costmap"/>
+        <remap from="astar_planning_node/goal" to="targetWpPose"/>
+        <remap from="astar_planning_node/costmap" to="costmap_node/merged_costmap"/>
     </node>
 
     <node name="lane_planner" pkg="eg_planner" type="lane_planner">
         <rosparam file="$(find eg_navigation)/config/lane_planner.yaml" command="load" />
         <remap from="lane_planner/costmap" to="costmap_node/my_costmap/costmap"/>
-        <remap from="path" to="astar_plannnig_node/path"/>
+        <remap from="path" to="astar_planning_node/path"/>
         <remap from="robot_now_vel" to="cmd_vel"/>
     </node>
 
     <node name="pure_posePursuit" pkg="eg_track" type="pure_posePursuit">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="30"/>
         <param name="maxVelocity" value="1.0"/>
-        <param name="minVelocity" value="0.1"/>
+        <param name="minVelocity" value="0.0"/>
         <param name="max_angular_vel" value="0.5"/>
         <param name="maxCurvature" value="3"/>
         <remap from="pure_posePursuit/pose_in" to="lane_planner/pose_out"/>
@@ -77,7 +89,7 @@
 
 
     <node name="wpBack_recovery" pkg="eg_safety" type="wpBack_recovery" output="screen">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="20"/>
         <param name="linear_vel" value="-0.3"/>
@@ -95,7 +107,7 @@
     </node>-->
 
     <node name="twist_maneger" pkg="eg_navigation" type="twist_maneger">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="30"/>
         <remap from="twist_maneger/targetWpPose_in" to="targetWpPose"/>
@@ -116,5 +128,7 @@
     <!--rviz-->
     <arg name="rvizconfig" default="$(find eg_navigation)/rviz/navigation_2d.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" respawn="true" />
+
+    <node name="wpInitialPose" pkg="eg_wptool" type="wpInitialPose"/>
 
 </launch>

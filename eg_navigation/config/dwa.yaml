@@ -1,0 +1,17 @@
+maxSpeed : 1.0
+minSpeed : -0.4
+maxYaw_rate : 140 #[degree/s]
+maxAccel : 1
+maxYawVel_rate : 120 #[degree/ss]
+v_resolution : 0.2
+w_resolution : 2 #[degree/s]
+dt : 0.1
+predictTime : 3
+angleCost_gain : 0.1
+distanceCost_gain : 0.2
+obstacleCost_gain : 0.4
+robot_stuck_value : 0.001
+
+map_frame_id : map
+base_link_frame_id : base_link
+loop_rate : 20

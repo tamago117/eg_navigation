@@ -35,5 +35,5 @@ odom_alpha3: 0.2 #オドメトリの回転成分がオドメトリの直進成�
 odom_alpha4: 0.2 #オドメトリの回転成分がオドメトリの回転成分に与える誤差
 odom_alpha5: 0.2 #Translation-related noise parameter (only used if model is "omni").
 odom_frame_id: odom
-base_frame_id: base_foot_point
+base_frame_id: base_link
 global_frame_id: map

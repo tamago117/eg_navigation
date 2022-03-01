@@ -15,6 +15,13 @@ find_package(catkin REQUIRED COMPONENTS
   costmap_2d
 )
 
+find_package(OpenMP REQUIRED)
+if(OPENMP_FOUND)
+  message(STATUS "OPENMP FOUND")
+  set(OpenMP_FLAGS ${OpenMP_CXX_FLAGS})  # or if you use C: ${OpenMP_C_FLAGS}
+  set(OpenMP_LIBS gomp)
+endif()
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -105,10 +112,11 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES eg_mixed
-#  CATKIN_DEPENDS roscpp rospy std_msgs tf2_ros
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES eg_mixed
+  CATKIN_DEPENDS roscpp rospy std_msgs tf2_ros
+  DEPENDS system_lib
+  DEPENDS OpenMP
 )
 
 ###########
@@ -118,7 +126,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+ include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -164,6 +172,21 @@ target_link_libraries(laser2pc
 
 add_executable(costmap_node   src/costmap_node.cpp)
 target_link_libraries(costmap_node
+  ${catkin_LIBRARIES}
+)
+
+add_executable(path_costmap src/path_costmap.cpp)
+target_compile_options(path_costmap PRIVATE ${OpenMP_FLAGS})
+add_dependencies(path_costmap ${catkin_EXPORTED_TARGETS})
+target_link_libraries(path_costmap ${catkin_LIBRARIES} ${OpenMP_LIBS})
+
+add_executable(costmap_merger   src/costmap_merger.cpp)
+target_link_libraries(costmap_merger
+  ${catkin_LIBRARIES}
+)
+
+add_executable(floor_tf_broadcaster   src/floor_tf_broadcaster.cpp)
+target_link_libraries(floor_tf_broadcaster
   ${catkin_LIBRARIES}
 )
 

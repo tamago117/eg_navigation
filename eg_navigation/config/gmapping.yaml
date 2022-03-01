@@ -4,6 +4,6 @@ xmin: -4.0
 xmax:  4.0
 ymin: -4.0
 ymax:  4.0
-base_frame : base_foot_point
+base_frame : base_link
 map_frame : map
 odom_frame : odom

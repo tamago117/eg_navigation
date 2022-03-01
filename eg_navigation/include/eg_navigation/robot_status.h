@@ -3,11 +3,14 @@
 
 //addition status
 enum class robot_status{
-    run,
-    stop,
-    angleAdjust,
-    safety_stop,
-    recovery
+    run,//0
+    stop,//1
+    angleAdjust,//2
+    safety_stop,//3
+    recovery,//4
+    column,//5
+    speed_up,//6
+    tracking//7
 };
 
 std::string robot_status_str(robot_status status)
@@ -23,6 +26,12 @@ std::string robot_status_str(robot_status status)
             return "safety_stop";
         case(robot_status::recovery):
             return "recovery";
+        case(robot_status::column):
+            return "column";
+        case(robot_status::speed_up):
+            return "speed_up";
+        case(robot_status::tracking):
+            return "tracking";
         default:
             return "";
     }

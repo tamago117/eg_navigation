@@ -24,6 +24,14 @@ void cost_callback(const nav_msgs::OccupancyGrid& costmap_message)
     costmap = costmap_message;
 }
 
+bool planning_stop = false;
+void planningStop_callback(const std_msgs::Bool planningStop_message)
+{
+    planning_stop = planningStop_message.data;
+}
+
+
+
 int getCost(double x, double y)
 {
     //x = costmap.info.origin.position.x + x_grid*costmap.info.resolution
@@ -85,9 +93,10 @@ int main(int argc, char** argv)
     pnh.param<std::string>("map_frame_id", map_id, "map");
     pnh.param<std::string>("base_link_frame_id", base_link_id, "base_link");
 
-    ros::Subscriber goalPose_sub = nh.subscribe("astar_plannnig_node/goal", 50, poseStamp_callback);
-    ros::Subscriber cost_sub = nh.subscribe("astar_plannnig_node/costmap", 10, cost_callback);
-    ros::Publisher path_pub = nh.advertise<nav_msgs::Path>("astar_plannnig_node/path", 10);
+    ros::Subscriber goalPose_sub = nh.subscribe("astar_planning_node/goal", 50, poseStamp_callback);
+    ros::Subscriber cost_sub = nh.subscribe("astar_planning_node/costmap", 10, cost_callback);
+    ros::Subscriber planningStop_sub = nh.subscribe("astar_planning_node/planning_stop", 1, planningStop_callback);
+    ros::Publisher path_pub = nh.advertise<nav_msgs::Path>("astar_planning_node/path", 10);
     ros::Publisher bool_pub = nh.advertise<std_msgs::Bool>("astar_planning_node/successPlan", 10);
 
     ctr::a_star star(resolution, costmapThreshold, heuristic_gain);
@@ -101,6 +110,20 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(rate);
     while(ros::ok())
     {
+        if(planning_stop){
+            //path message contains only a goalPoseStamp
+            nav_msgs::Path plan_path;
+            plan_path.header.frame_id = map_id;
+            plan_path.header.stamp = ros::Time::now();
+            plan_path.poses.push_back(goalPoseStamp);
+
+            path_pub.publish(plan_path);
+
+            ros::spinOnce();
+            loop_rate.sleep();
+            continue;
+        }
+
         if(costmap.data.size()>0){
 
             std::vector<double> path_x, path_y;

@@ -8,11 +8,13 @@
 */
 #include <ros/ros.h>
 #include <nav_msgs/Path.h>
+#include <std_msgs/UInt8MultiArray.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <std_msgs/Int32.h>
 #include <std_msgs/ColorRGBA.h>
 #include <iostream>
 #include <string>
+#include "eg_wptool/robot_status.h"
 
 const double marker_diameter = 0.1;
 const double marker_height = 0.03;
@@ -30,6 +32,8 @@ std_msgs::ColorRGBA set_color(double r, double g, double b, double a)
 }
 std_msgs::ColorRGBA green = set_color(0.0, 1.0, 0.0, 1.0);
 std_msgs::ColorRGBA red = set_color(1.0, 0.0, 0.0, 1.0);
+std_msgs::ColorRGBA blue = set_color(0.0, 0.0, 1.0, 1.0);
+std_msgs::ColorRGBA purple = set_color(1.0, 0.0, 1.0, 1.0);
 std_msgs::ColorRGBA gray = set_color(0.3, 0.3, 0.3, 1.0);
 std_msgs::ColorRGBA black = set_color(0.0, 0.0, 0.0, 1.0);
 
@@ -46,6 +50,13 @@ void path_callback(const nav_msgs::Path& path_message)
     path = path_message;
 }
 
+std_msgs::UInt8MultiArray mode_array;
+void wpMode_callback(const std_msgs::UInt8MultiArray& modeArray_message)
+{
+    mode_array = modeArray_message;
+}
+
+
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "wpVisualizer");
@@ -56,10 +67,11 @@ int main(int argc, char** argv)
     ros::Publisher markerText_pub = nh.advertise<visualization_msgs::MarkerArray>("wayPoint/markerText", 10);
     ros::Subscriber targetWp_sub = nh.subscribe("targetWp", 50, targetWp_callback);
     ros::Subscriber path_sub = nh.subscribe("path", 50, path_callback);
+    ros::Subscriber wpMode_sub = nh.subscribe("wayPoint/mode", 10, wpMode_callback);
 
     double markerSize;
     pnh.param<double>("markerSize", markerSize, 1.0);
-    
+
     ros::Rate loop_rate(10);
 
     const double marker_diameter = 0.1*markerSize;
@@ -90,16 +102,26 @@ int main(int argc, char** argv)
             marker.pose = markerText.pose = path.poses.at(i).pose;
             markerText.pose.position.z+=marker_height;
             markerText.text= std::to_string(i).c_str();
-            //color select
-            if(targetWp > i){
-                marker.color = gray;
-            }
+            //target
             if(targetWp == i){
                 marker.color = red;
             }
             if(targetWp < i){
                 marker.color = green;
             }
+            //stop marker
+            if(mode_array.data[i] == (uint8_t)robot_status::stop){
+                marker.color = blue;
+            }
+            //column marker
+            if(mode_array.data[i] == (uint8_t)robot_status::column){
+                marker.color = purple;
+            }
+            //end target
+            if(targetWp > i){
+                marker.color = gray;
+            }
+
             markerText.color = black;
 
             marker_array.markers.push_back(marker);

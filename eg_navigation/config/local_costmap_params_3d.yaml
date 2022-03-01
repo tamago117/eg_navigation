@@ -3,12 +3,12 @@ my_costmap:
     - {name: obstacle_layer, type: 'costmap_2d::ObstacleLayer'}
     - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
   global_frame: floor
-  robot_base_frame: base_foot_point
+  robot_base_frame: base_link
   #footprint: [[0.4,0.4], [-0.65,0.4], [-0.65,-0.4], [0.4,-0.4]]
   footprint: [[-0.55, 0], [-0.5, 0.38], [0, 0.55], [0.48, 0.38], [0.55, 0], [0.48, -0.38], [0, -0.55], [-0.5, -0.38]]
   rolling_window: true
-  width: 20.0
-  height: 20.0
+  width: 40.0
+  height: 40.0
   resolution: 0.1
   update_frequency: 20.0
   publish_frequency: 20.0
@@ -22,7 +22,7 @@ my_costmap:
       sensor_frame: velodyne
       topic: velodyne_points
       data_type: PointCloud2
-      min_obstacle_height : 0.4
+      min_obstacle_height : 0.3
       #sensor_frame: floor
       #topic: mapcloud
       #data_type: PointCloud2
@@ -33,3 +33,6 @@ my_costmap:
   inflation_layer:
     inflation_radius: 2
     cost_scaling_factor : 5
+
+  path_costmap:
+    cost_path_width: 3.0

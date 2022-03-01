@@ -10,6 +10,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Path.h>
+#include <std_msgs/UInt8MultiArray.h>
 #include <visualization_msgs/MarkerArray.h>
 #include "eg_wptool/csv_input.h"
 
@@ -25,13 +26,17 @@ int main(int argc, char **argv)
 
 
     ros::Publisher path_pub = nh.advertise<nav_msgs::Path>("wayPoint/path", 10);
+    ros::Publisher wayMode_pub = nh.advertise<std_msgs::UInt8MultiArray>("wayPoint/mode", 10);
 
     geometry_msgs::PoseStamped pose;
+    
 
-    ros::Rate loop_rate(1);
+    ros::Rate loop_rate(5);
     while(ros::ok())
     {
+        std_msgs::UInt8MultiArray mode_array;
         nav_msgs::Path path;
+
         //csv読み込み
         csv::csv_input csv(filePath);
         for(int i = 0; i < csv.lineNum(); ++i)
@@ -46,12 +51,15 @@ int main(int argc, char **argv)
             pose.pose.orientation.z = csv.readCSV(i, 5);
             pose.pose.orientation.w = csv.readCSV(i, 6);
 
+            mode_array.data.push_back((uint8_t)csv.readCSV(i, 7));
+
             path.poses.push_back(pose);
         }
         path.header.frame_id = map_id;
         path.header.stamp = ros::Time::now();
 
         path_pub.publish(path);
+        wayMode_pub.publish(mode_array);
         ros::spinOnce();
         loop_rate.sleep();
     }

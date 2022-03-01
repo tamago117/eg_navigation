@@ -84,6 +84,13 @@ csv_input::csv_input(const std::string filePath)
 
 double csv_input::readCSV(int line, int col)
 {
+    //range check
+    if(line>=lineNum()) std::cout << "csv line range is over";
+    if(col>=colNum()) std::cout << "csv line" << line <<" col range is over";
+
+    //empty pass
+    if(strcon[line][col] == "") return 0;
+
     return std::stod(strcon[line][col]);
 }
 

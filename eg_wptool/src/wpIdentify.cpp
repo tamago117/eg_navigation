@@ -21,12 +21,12 @@
 #include "eg_wptool/tf_position.h"
 
 nav_msgs::Path path;
-void path_callback(const nav_msgs::Path path_message)
+void path_callback(const nav_msgs::Path& path_message)
 {
     path = path_message;
 }
 
-void kdTree(int wayPointIdx, const geometry_msgs::Pose& nowPos){
+void kdTree(int& wayPointIdx, const geometry_msgs::Pose& nowPos){
     // How to use a KdTree to search
     // Ref: http://pointclouds.org/documentation/tutorials/kdtree_search.php#kdtree-search
 
@@ -34,6 +34,7 @@ void kdTree(int wayPointIdx, const geometry_msgs::Pose& nowPos){
     // Use pcl::PointXYZRGB to visualize segmentation.
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
     cloud->points.resize(path.poses.size());
+
 
     for(int i=0; i<path.poses.size(); i++){
         cloud->points[i].x = path.poses[i].pose.position.x;
@@ -53,12 +54,13 @@ void kdTree(int wayPointIdx, const geometry_msgs::Pose& nowPos){
     int K = 1;
     std::vector<int> pointIdxNKNSearch(K);
     std::vector<float> pointNKNSquaredDistance(K);
-    if ( kdtree.nearestKSearch(searchPoint, K, pointIdxNKNSearch, pointNKNSquaredDistance) > 0 )
+    if ( kdtree->nearestKSearch(searchPoint, K, pointIdxNKNSearch, pointNKNSquaredDistance) > 0 )
     {
         if(wayPointIdx != pointIdxNKNSearch[0]){
-            std::cout<<"now way point : "<<pointIdxNKNSearch[0]<<std::endl;
+            std::cout<<"near way point update!"<<std::endl;
         }
         wayPointIdx = pointIdxNKNSearch[0];
+        std::cout<<"now way point : "<<wayPointIdx<<std::endl;
 
         /*for (size_t i = 0; i < pointIdxNKNSearch.size (); ++i){
             cloud.points[ pointIdxNKNSearch[i] ].r = 255;
@@ -72,6 +74,7 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "wpIdentify");
     ros::NodeHandle nh;
+    ros::NodeHandle pnh("~");
 
     std::string map_id, base_link_id;
     pnh.param<std::string>("map_frame_id", map_id, "map");
@@ -81,7 +84,7 @@ int main(int argc, char** argv)
 
     tf_position nowPosition(map_id, base_link_id, rate);
 
-    ros::Subscriber path_sub = nh.subscribe("path", 50, path_callback);
+    ros::Subscriber path_sub = nh.subscribe("wayPoint/path", 50, path_callback);
 
     ros::Rate loop_rate(rate);
 
@@ -91,10 +94,10 @@ int main(int argc, char** argv)
         if(path.poses.size()>0){
 
             kdTree(nowWpIdx, nowPosition.getPose());
-
-            ros::spinOnce();
-            loop_rate.sleep();
         }
+
+        ros::spinOnce();
+        loop_rate.sleep();
     }
     return 0;
 }
