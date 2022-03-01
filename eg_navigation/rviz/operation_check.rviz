@@ -8,6 +8,7 @@ Panels:
         - /Status1
         - /Imu1
         - /TF1/Frames1
+        - /LaserScan1
       Splitter Ratio: 0.5
     Tree Height: 422
   - Class: rviz/Selection
@@ -28,7 +29,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: PointCloud2
+    SyncSource: LaserScan
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -101,16 +102,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        velodyne:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        velodyne_base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -177,34 +168,28 @@ Visualization Manager:
           Value: true
         right_wheel_link:
           Value: true
-        velodyne:
-          Value: true
-        velodyne_base_link:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
+        base_foot_point:
+          {}
         odom:
-          base_foot_point:
-            base_link:
-              camera_link:
-                {}
-              front_lrf_link:
-                {}
-              imu_link:
-                {}
-              left_wheel_link:
-                {}
-              rear_lrf_link:
-                {}
-              right_wheel_link:
-                {}
-              velodyne_base_link:
-                velodyne:
-                  {}
+          base_link:
+            camera_link:
+              {}
+            front_lrf_link:
+              {}
+            imu_link:
+              {}
+            left_wheel_link:
+              {}
+            rear_lrf_link:
+              {}
+            right_wheel_link:
+              {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -263,7 +248,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 38.347869873046875
+      Distance: 31.220317840576172
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -278,10 +263,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.1303974390029907
+      Pitch: 0.9953975677490234
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.235410690307617
+      Yaw: 4.102224826812744
     Saved: ~
 Window Geometry:
   Displays:
@@ -299,5 +284,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1299
-  X: 67
-  Y: 0
+  X: 2541
+  Y: 293
