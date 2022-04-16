@@ -64,6 +64,7 @@ int main(int argc, char** argv)
             array.data[4] = nowPose.orientation.y;
             array.data[5] = nowPose.orientation.z;
             array.data[6] = nowPose.orientation.w;
+            array.data[7] = 0;
 
             pub.publish(array);
         }
