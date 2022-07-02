@@ -149,7 +149,7 @@ int main(int argc, char** argv)
             }
         }
         //safety stop
-        if(recovery_mode.data == robot_status_str(robot_status::safety_stop)){
+        if(recovery_mode.data == robot_status_str(robot_status::safety_stop) && mode.data != robot_status_str(robot_status::stop)){
             mode.data = robot_status_str(robot_status::safety_stop);
         }
         //end safety stop
@@ -160,7 +160,7 @@ int main(int argc, char** argv)
             }
         }
         //recovery mode
-        if(recovery_mode.data == robot_status_str(robot_status::recovery)){
+        if(recovery_mode.data == robot_status_str(robot_status::recovery) && mode.data != robot_status_str(robot_status::stop)){
             recovery_init = true;
             mode.data = robot_status_str(robot_status::recovery);
             cmd_vel = recovery_cmd_vel;
