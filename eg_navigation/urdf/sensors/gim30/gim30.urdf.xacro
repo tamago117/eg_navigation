@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find kcctsim)/urdf/common.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/common.xacro"/>
   
   <xacro:macro name="gim30_v0" params="parent *joint_origin">
 	<joint name="gim30_joint" type="fixed">
@@ -13,12 +13,12 @@
     <link name="gim30_link">
       <visual>
         <geometry>
-          <mesh filename="package://kcctsim/meshes/DAE/sensors/gim30/gim30.dae"/>
+          <mesh filename="package://eg_navigation/meshes/DAE/sensors/gim30/gim30.dae"/>
         </geometry>
       </visual>
 	  <collision>
 		<geometry>
-		  <mesh filename="package://kcctsim/meshes/STL/sensors/gim30/gim30.stl"/>
+		  <mesh filename="package://eg_navigation/meshes/STL/sensors/gim30/gim30.stl"/>
 		</geometry>
 	  </collision>
 	  <inertial>

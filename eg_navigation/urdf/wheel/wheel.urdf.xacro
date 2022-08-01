@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find kcctsim)/urdf/common.xacro"/>
-  <xacro:include filename="$(find kcctsim)/urdf/wheel/wheel.transmission.xacro"/>
-  <xacro:include filename="$(find kcctsim)/urdf/wheel/wheel.gazebo.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/common.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/wheel/wheel.transmission.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/wheel/wheel.gazebo.xacro"/>
 
   <property name="wheel_radius" value="0.1575"/>
   <property name="wheel_length" value="0.032"/>
@@ -20,8 +20,8 @@
 	<link name="${prefix}_wheel_link">
 	  <visual>
 		<geometry>
-		  <!--<mesh filename="package://kcctsim/meshes/DAE/wheel/wheel_link.dae"/>-->
-		   <mesh filename="package://kcctsim/meshes/STL/wheel/wheel.stl"/>
+		  <!--<mesh filename="package://eg_navigation/meshes/DAE/wheel/wheel_link.dae"/>-->
+		   <mesh filename="package://eg_navigation/meshes/STL/wheel/wheel.stl"/>
 		</geometry>
 		<material name="black">
     		<color rgba="0.2 0.2 0.2 2.0"/>

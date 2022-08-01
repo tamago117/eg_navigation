@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find kcctsim)/urdf/common.xacro"/>
-  <xacro:include filename="$(find kcctsim)/urdf/sensors/lrf/lrf.gazebo.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/common.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/sensors/lrf/lrf.gazebo.xacro"/>
 
   <xacro:macro name="lrf_v0" params="prefix parent *joint_origin">
 	<joint name="${prefix}_lrf_joint" type="fixed">
@@ -14,12 +14,12 @@
 	<link name="${prefix}_lrf_link">
 	  <visual>
 		<geometry>
-		  <mesh filename="package://kcctsim/meshes/STL/sensors/utm30lx.stl"/>
+		  <mesh filename="package://eg_navigation/meshes/STL/sensors/utm30lx.stl"/>
 		</geometry>
 	  </visual>
 	  <collision>
 		<geometry>
-		  <mesh filename="package://kcctsim/meshes/STL/sensors/utm30lx.stl"/>
+		  <mesh filename="package://eg_navigation/meshes/STL/sensors/utm30lx.stl"/>
 		</geometry>
 	  </collision>
 	  <inertial>

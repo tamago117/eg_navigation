@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find kcctsim)/urdf/base/base.gazebo.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/base/base.gazebo.xacro"/>
   
   <xacro:macro name="base_v0" params="parent *joint_origin">
 	<joint name="base_link_joint" type="fixed">
@@ -13,8 +13,8 @@
 	<link name="base_link">
 	  <visual>
 		<geometry>
-		 <!--- <mesh filename="package://kcctsim/meshes/DAE/base/base_link.dae"/>-->
-		 <mesh filename="package://kcctsim/meshes/STL/base/body.stl"/>
+		 <!--- <mesh filename="package://eg_navigation/meshes/DAE/base/base_link.dae"/>-->
+		 <mesh filename="package://eg_navigation/meshes/STL/base/body.stl"/>
 		</geometry>
 		<material name="gray">
     <color rgba="0.8 0.8 0.8 2.0"/>
@@ -22,7 +22,7 @@
 	  </visual>
 	  <collision>
 		<geometry>
-		  <mesh filename="package://kcctsim/meshes/STL/base/body.stl"/>
+		  <mesh filename="package://eg_navigation/meshes/STL/base/body.stl"/>
 		</geometry>
 	  </collision>
 	  <inertial>

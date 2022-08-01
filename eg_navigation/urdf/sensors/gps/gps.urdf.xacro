@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find kcctsim)/urdf/common.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/common.xacro"/>
 
   <xacro:macro name="gps_v0" params="parent *joint_origin">
 	<joint name="gps_joint" type="fixed">
@@ -13,12 +13,12 @@
 	<link name="gps_link">
 	  <visual>
 		<geometry>
-		  <mesh filename="package://kcctsim/meshes/DAE/sensors/gps/gps.dae"/>
+		  <mesh filename="package://eg_navigation/meshes/DAE/sensors/gps/gps.dae"/>
 		</geometry>
 	  </visual>
 	  <collision>
 		<geometry>
-		  <mesh filename="package://kcctsim/meshes/STL/sensors/gps/gps.stl"/>
+		  <mesh filename="package://eg_navigation/meshes/STL/sensors/gps/gps.stl"/>
 		</geometry>
 	  </collision>
 	  <inertial>

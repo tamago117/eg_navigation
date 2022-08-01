@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <robot name="naviton" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find kcctsim)/urdf/base/base.urdf.xacro"/>
-  <xacro:include filename="$(find kcctsim)/urdf/wheel/wheel.urdf.xacro"/>
-  <xacro:include filename="$(find kcctsim)/urdf/sensors/gps/gps.urdf.xacro"/>
-  <xacro:include filename="$(find kcctsim)/urdf/sensors/gim30/gim30.urdf.xacro"/>
-  <xacro:include filename="$(find kcctsim)/urdf/sensors/lrf/lrf.urdf.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/base/base.urdf.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/wheel/wheel.urdf.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/sensors/gps/gps.urdf.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/sensors/gim30/gim30.urdf.xacro"/>
+  <xacro:include filename="$(find eg_navigation)/urdf/sensors/lrf/lrf.urdf.xacro"/>
   <xacro:include filename="$(find velodyne_description)/urdf/HDL-32E.urdf.xacro"/>
-  <xacro:include filename="$(find kcctsim)/urdf/sensors/imu/imu.urdf.xacro" />
+  <xacro:include filename="$(find eg_navigation)/urdf/sensors/imu/imu.urdf.xacro" />
 
   <!-- =============== Link & Joint =============== -->
   <!-- Base -->
