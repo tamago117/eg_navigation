@@ -81,6 +81,8 @@ int main(int argc, char** argv)
     pnh.param<std::string>("base_link_frame_id", base_link_id, "base_link");
     double rate;
     pnh.param<double>("loop_rate", rate, 100);
+    bool mode_angleAdjust;
+    pnh.param<bool>("angleAdjust", mode_angleAdjust, true);
 
     ros::Publisher cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("twist_maneger/cmd_vel", 10);
     ros::Publisher mode_pub = nh.advertise<std_msgs::String>("mode", 10);
@@ -106,16 +108,21 @@ int main(int argc, char** argv)
         if(run_init){
             //run mode
             if(mode.data == robot_status_str(robot_status::run)){
-                double dx = targetPose.position.x - nowPosition.getPose().position.x;
-                double dy = targetPose.position.y - nowPosition.getPose().position.y;
-                double targetAngle = atan2(dy, dx);
-                double diffAngle = arrangeAngle(targetAngle - nowPosition.getYaw());
+                if(mode_angleAdjust){
+                    double dx = targetPose.position.x - nowPosition.getPose().position.x;
+                    double dy = targetPose.position.y - nowPosition.getPose().position.y;
+                    double targetAngle = atan2(dy, dx);
+                    double diffAngle = arrangeAngle(targetAngle - nowPosition.getYaw());
 
-                cmd_vel.linear.x = 0;
-                cmd_vel.angular.z = diffAngle * 1.5;
-                if(abs(diffAngle) < 10*M_PI/180){
+                    cmd_vel.linear.x = 0;
+                    cmd_vel.angular.z = diffAngle * 1.5;
+                    if(abs(diffAngle) < 10*M_PI/180){
+                        run_init = false;
+                    }
+                }else{//no angle adjust
                     run_init = false;
                 }
+                
             }
         }
         //stop mode
@@ -126,19 +133,23 @@ int main(int argc, char** argv)
         }
         //angle adjust
         if(mode.data == robot_status_str(robot_status::angleAdjust)){
-            angleAdjustfinish = false;
+            if(mode_angleAdjust){ //angle adjust mode
+                angleAdjustfinish = false;
 
-            double diffAngle = arrangeAngle(quat2yaw(targetWpPose.pose.orientation) - nowPosition.getYaw());
+                double diffAngle = arrangeAngle(quat2yaw(targetWpPose.pose.orientation) - nowPosition.getYaw());
 
-            cmd_vel.linear.x = 0;
-            cmd_vel.angular.z = diffAngle * 1.5;
-            if(abs(diffAngle) < 1*M_PI/180){
+                cmd_vel.linear.x = 0;
+                cmd_vel.angular.z = diffAngle * 1.5;
+                if(abs(diffAngle) < 1*M_PI/180){
+                    mode.data = robot_status_str(robot_status::stop);
+                    angleAdjustfinish = true;
+                }
+            }else{ //no angle adjust
                 mode.data = robot_status_str(robot_status::stop);
-                angleAdjustfinish = true;
             }
         }
         //safety stop
-        if(recovery_mode.data == robot_status_str(robot_status::safety_stop)){
+        if(recovery_mode.data == robot_status_str(robot_status::safety_stop) && mode.data != robot_status_str(robot_status::stop)){
             mode.data = robot_status_str(robot_status::safety_stop);
         }
         //end safety stop
@@ -149,7 +160,7 @@ int main(int argc, char** argv)
             }
         }
         //recovery mode
-        if(recovery_mode.data == robot_status_str(robot_status::recovery)){
+        if(recovery_mode.data == robot_status_str(robot_status::recovery) && mode.data != robot_status_str(robot_status::stop)){
             recovery_init = true;
             mode.data = robot_status_str(robot_status::recovery);
             cmd_vel = recovery_cmd_vel;

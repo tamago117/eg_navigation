@@ -2,12 +2,14 @@
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/Joy.h>
 
-double control_rate;
+double v_control_rate;
+double w_control_rate;
+
 geometry_msgs::Twist cmd_vel;
 void joy_callback(const sensor_msgs::Joy& joy_msg)
 {
-  cmd_vel.linear.x = control_rate * joy_msg.axes[4];
-  cmd_vel.angular.z = control_rate * joy_msg.axes[0];
+  cmd_vel.linear.x = v_control_rate * joy_msg.axes[4];
+  cmd_vel.angular.z = w_control_rate * joy_msg.axes[0];
 }
 
 int main(int argc, char** argv)
@@ -18,7 +20,8 @@ int main(int argc, char** argv)
   ros::Publisher cmd_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1000);
   ros::Subscriber joy_sub = nh.subscribe("joy", 10, joy_callback);
 
-  pnh.param<double>("control_rate", control_rate, 1.0);
+  pnh.param<double>("v_control_rate", v_control_rate, 1.0);
+  pnh.param<double>("w_control_rate", w_control_rate, 1.0);
 
   ros::Rate loop_rate(10);
   while (ros::ok())

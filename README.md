@@ -5,12 +5,13 @@ ROS meta package for robot 2d/3d navigation
 
 - ROS Melodic
 - Gazebo(ver9.4.0) (for simulation) ->[update gazebo](https://bitbucket.org/DataspeedInc/velodyne_simulator/src/master/gazebo_upgrade.md)
+- [hdl_localization](https://github.com/koide3/hdl_localization) 
+- [ira_laser_tools](https://github.com/iralabdisco/ira_laser_tools.git)
 
 # install
 ```
 cd ~/catkin_ws/src
 git clone https://github.com/tamago117/eg_navigation
-git clone https://github.com/tamago117/control_panel_plugin
 cd ..
 catkin_make
 source ~/catkin_ws/devel/setup.bash
