@@ -1,0 +1,8 @@
+<library path="libcontrol_panel_plugin">
+  <!-- mode_select Panel -->
+  <class name="control_panel_plugin/modeSelect" type="control_panel_plugin::modeSelect" base_class_type="rviz::Panel">
+    <description>
+      mode select plugin.
+    </description>
+  </class>
+</library>
