@@ -83,6 +83,8 @@ int main(int argc, char** argv)
     pnh.param<double>("loop_rate", rate, 100);
     bool mode_angleAdjust;
     pnh.param<bool>("angleAdjust", mode_angleAdjust, true);
+    double angleAdjustGain;
+    pnh.param<double>("angleAdjustGain", angleAdjustGain, 1.5);
 
     ros::Publisher cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("twist_maneger/cmd_vel", 10);
     ros::Publisher mode_pub = nh.advertise<std_msgs::String>("mode", 10);
@@ -115,7 +117,7 @@ int main(int argc, char** argv)
                     double diffAngle = arrangeAngle(targetAngle - nowPosition.getYaw());
 
                     cmd_vel.linear.x = 0;
-                    cmd_vel.angular.z = diffAngle * 1.5;
+                    cmd_vel.angular.z = diffAngle * angleAdjustGain;
                     if(abs(diffAngle) < 10*M_PI/180){
                         run_init = false;
                     }
@@ -139,7 +141,7 @@ int main(int argc, char** argv)
                 double diffAngle = arrangeAngle(quat2yaw(targetWpPose.pose.orientation) - nowPosition.getYaw());
 
                 cmd_vel.linear.x = 0;
-                cmd_vel.angular.z = diffAngle * 1.5;
+                cmd_vel.angular.z = diffAngle * angleAdjustGain;
                 if(abs(diffAngle) < 1*M_PI/180){
                     mode.data = robot_status_str(robot_status::stop);
                     angleAdjustfinish = true;
