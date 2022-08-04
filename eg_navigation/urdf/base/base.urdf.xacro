@@ -7,10 +7,10 @@
 	<joint name="base_link_joint" type="fixed">
 	  <insert_block name="joint_origin"/>
 	  <parent link="${parent}"/>
-	  <child link="base_link"/>
+	  <child link="body_link"/>
 	</joint>
 
-	<link name="base_link">
+	<link name="body_link">
 	  <visual>
 		<geometry>
 		 <!--- <mesh filename="package://eg_navigation/meshes/DAE/base/base_link.dae"/>-->
