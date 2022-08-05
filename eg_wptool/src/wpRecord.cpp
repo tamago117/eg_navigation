@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 
             //csvdata : [x, y, z, q_x, q_y, q_z, q_w]
             std_msgs::Float32MultiArray array;
-            array.data.resize(7);
+            array.data.resize(9);
             nowPose = nowPosition.getPose();
             array.data[0] = nowPose.position.x;
             array.data[1] = nowPose.position.y;
@@ -65,6 +65,7 @@ int main(int argc, char** argv)
             array.data[5] = nowPose.orientation.z;
             array.data[6] = nowPose.orientation.w;
             array.data[7] = 0;
+            array.data[8] = 3.0;
 
             pub.publish(array);
         }

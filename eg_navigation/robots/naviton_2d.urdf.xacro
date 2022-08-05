@@ -11,8 +11,8 @@
 
   <!-- =============== Link & Joint =============== -->
   <!-- Base -->
-  <link name="base_foot_point"/>
-  <xacro:base_v0 parent="base_foot_point">
+  <link name="base_link"/>
+  <xacro:base_v0 parent="base_link">
 	<origin xyz="0 0 0.0"/>
   </xacro:base_v0>
 
