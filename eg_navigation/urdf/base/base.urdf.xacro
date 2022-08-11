@@ -5,7 +5,7 @@
   
   <xacro:macro name="base_v0" params="parent *joint_origin">
 	<joint name="base_link_joint" type="fixed">
-	  <insert_block name="joint_origin"/>
+	  <xacro:insert_block name="joint_origin"/>
 	  <parent link="${parent}"/>
 	  <child link="body_link"/>
 	</joint>
@@ -17,7 +17,7 @@
 		 <mesh filename="package://eg_navigation/meshes/STL/base/body.stl"/>
 		</geometry>
 		<material name="gray">
-    <color rgba="0.8 0.8 0.8 2.0"/>
+    <color rgba="0.8 0.8 0.8 1.0"/>
   </material>
 	  </visual>
 	  <collision>
