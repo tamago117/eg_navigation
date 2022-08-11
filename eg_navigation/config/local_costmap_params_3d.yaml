@@ -36,3 +36,4 @@ my_costmap:
 
   path_costmap:
     cost_path_width: 3.0
+    use_dynamic_path_width: true

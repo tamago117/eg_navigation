@@ -10,6 +10,7 @@
 #include <ros/ros.h>
 #include <nav_msgs/Path.h>
 #include <std_msgs/Int32.h>
+#include <std_msgs/Float32MultiArray.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <tf/transform_listener.h>
 #include <tf/transform_broadcaster.h>
@@ -35,6 +36,11 @@ nav_msgs::Path path;
 void path_callback(const nav_msgs::Path& path_message){
     path = path_message;
 }
+std_msgs::Float32MultiArray path_width;
+void path_width_callback(const std_msgs::Float32MultiArray& msg){
+    path_width=msg;
+}
+
 
 //calc functions
 
@@ -131,6 +137,8 @@ int main(int argc, char **argv){
     pn.param<string>("global_frame", global_frame, "map");
     string robot_base_frame;
     pn.param<string>("robot_base_frame", robot_base_frame, "base_link");
+    bool use_dynamic_path_width;
+    pn.param<bool>("use_dynamic_path_width", use_dynamic_path_width, false);
 
     //固有パラメータ
     //costの傾き costが0から100まで変化する幅[m]
@@ -148,6 +156,8 @@ int main(int argc, char **argv){
     ros::Subscriber path_sub = lSubscriber.subscribe("wayPoint/path", 50, path_callback);
     //Now subscliber
     ros::Subscriber now_wp_sub = lSubscriber.subscribe("targetWp", 50, now_wp_callback);
+    //Now subscliber
+    ros::Subscriber path_width_sub = lSubscriber.subscribe("wayPoint/pathWidth", 50, path_width_callback);
 
     //costmap publisher
     ros::Publisher costmap_pub=n.advertise<nav_msgs::OccupancyGrid>("/costmap_node/path_costmap", 1);
@@ -230,9 +240,13 @@ int main(int argc, char **argv){
                             nb_dis_num=i;
                         }
                     }
+                    if(path.poses.size()==path_width.data.size()){
+                        costmap.data[gy*gw+gx]=(nn_online_dis_min>path_width.data[nb_dis_num])?100:clip(int(nn_online_dis_min/cost_path_width*100.0),0,100);
+                    }
+                    else{
+                        costmap.data[gy*gw+gx]=(nn_online_dis_min>cost_wall_width)?100:clip(int(nn_online_dis_min/cost_path_width*100.0),0,100);
+                    }
                     
-                    costmap.data[gy*gw+gx]=(nn_online_dis_min>cost_wall_width)?100:clip(int(nn_online_dis_min/cost_path_width*100.0),0,100);
-
                     j++;
                 }
                 

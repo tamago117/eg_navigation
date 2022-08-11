@@ -65,7 +65,7 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_foot_point:
+        base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -149,7 +149,7 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        base_foot_point:
+        base_link:
           Value: true
         base_link:
           Value: false
@@ -177,7 +177,7 @@ Visualization Manager:
       Tree:
         map:
           odom:
-            base_foot_point:
+            base_link:
               base_link:
                 camera_link:
                   {}
@@ -199,7 +199,7 @@ Visualization Manager:
       Value: true
       color: 25; 255; 240
       duration: 1000
-      frame: base_foot_point
+      frame: base_link
       line_width: 0.25
   Enabled: true
   Global Options:

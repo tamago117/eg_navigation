@@ -40,7 +40,7 @@
         <remap from="path" to="wayPoint/path"/>
     </node>-->
     <node name="wpSelect" pkg="eg_wptool" type="wpSelect">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="maxVelocity" value="0.7"/>
         <param name="loop_rate" value="20"/>
@@ -73,7 +73,7 @@
 
 
     <node name="wpBack_recovery" pkg="eg_safety" type="wpBack_recovery" output="screen">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="20"/>
         <param name="linear_vel" value="-0.3"/>
@@ -91,7 +91,7 @@
     </node>-->
 
     <node name="twist_maneger" pkg="eg_navigation" type="twist_maneger">
-        <param name="base_link_frame_id" value="base_foot_point"/>
+        <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
         <param name="loop_rate" value="30"/>
         <remap from="twist_maneger/targetWpPose_in" to="targetWpPose"/>

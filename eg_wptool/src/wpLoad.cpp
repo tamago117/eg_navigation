@@ -11,6 +11,7 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Path.h>
 #include <std_msgs/UInt8MultiArray.h>
+#include <std_msgs/Float32MultiArray.h>
 #include <visualization_msgs/MarkerArray.h>
 #include "eg_wptool/csv_input.h"
 
@@ -27,6 +28,8 @@ int main(int argc, char **argv)
 
     ros::Publisher path_pub = nh.advertise<nav_msgs::Path>("wayPoint/path", 10);
     ros::Publisher wayMode_pub = nh.advertise<std_msgs::UInt8MultiArray>("wayPoint/mode", 10);
+    ros::Publisher path_width_pub = nh.advertise<std_msgs::Float32MultiArray>("wayPoint/pathWidth", 10);
+
 
     geometry_msgs::PoseStamped pose;
     
@@ -36,6 +39,7 @@ int main(int argc, char **argv)
     {
         std_msgs::UInt8MultiArray mode_array;
         nav_msgs::Path path;
+        std_msgs::Float32MultiArray path_width;
 
         //csv読み込み
         csv::csv_input csv(filePath);
@@ -53,6 +57,8 @@ int main(int argc, char **argv)
 
             mode_array.data.push_back((uint8_t)csv.readCSV(i, 7));
 
+            path_width.data.push_back(csv.readCSV(i, 8));
+
             path.poses.push_back(pose);
         }
         path.header.frame_id = map_id;
@@ -60,6 +66,7 @@ int main(int argc, char **argv)
 
         path_pub.publish(path);
         wayMode_pub.publish(mode_array);
+        path_width_pub.publish(path_width);
         ros::spinOnce();
         loop_rate.sleep();
     }
