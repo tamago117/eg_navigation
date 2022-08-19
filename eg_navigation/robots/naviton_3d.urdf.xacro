@@ -93,7 +93,7 @@
 					   min_rad="-2.35619449019" max_rad="1.65619449019"
 					   min_range="0.10" max_range="60.0"/>
   <!-- VHDL-32E -->
-  <HDL-32E parent="base_link" name="velodyne" topic="velodyne_points" hz="10" samples="1024" gpu="true">
+  <xacro:HDL-32E parent="base_link" name="velodyne" topic="velodyne_points" hz="10" samples="1024" gpu="true">
       <origin xyz="0 0 0.8" rpy="0 0 0" />
-  </HDL-32E>
+  </xacro:HDL-32E>
 </robot>
