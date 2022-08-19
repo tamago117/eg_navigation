@@ -88,16 +88,27 @@ inline double line_point_nn_pose(const geometry_msgs::Pose& pose1,const geometry
     double y1=pose2.position.y;
     double x2=pose3.position.x;
     double y2=pose3.position.y;
-    //pathの方程式を求める
-    double a0=(y1-y0)/(x1-x0);
-    double b0=-a0*x0+y0;
-    //自己位置を通りpathに垂直な直線の方程式を求める
-    double a1=-(1/a0);
-    double b1=y2-a1*x2;
-    //2直線の交点を求める
-    pose4.position.x=(b1-b0)/(a0-a1);
-    pose4.position.y=(a0*b1-b0*a1)/(a0-a1);
-
+    //y軸に平行な場合
+    if(std::abs(x1-x0)<0.00001){
+        pose4.position.x=x0;
+        pose4.position.y=y2;
+    }
+    //x軸に平行な場合
+    else if(std::abs(y1-y0)<0.00001){
+        pose4.position.x=x2;
+        pose4.position.y=y0;
+    }
+    else{
+        //pathの方程式を求める
+        double a0=(y1-y0)/(x1-x0);
+        double b0=-a0*x0+y0;
+        //自己位置を通りpathに垂直な直線の方程式を求める
+        double a1=-(1/a0);
+        double b1=y2-a1*x2;
+        //2直線の交点を求める
+        pose4.position.x=(b1-b0)/(a0-a1);
+        pose4.position.y=(a0*b1-b0*a1)/(a0-a1);
+    }
     //pose1->pose2 * pose1->pose3 内積
     double ip1=(x1-x0)*(x2-x0)+(y1-y0)*(y2-y0);
     //pose2->pose1 * pose2->pose3 内積
@@ -136,9 +147,7 @@ int main(int argc, char **argv){
     string global_frame;
     pn.param<string>("global_frame", global_frame, "map");
     string robot_base_frame;
-    pn.param<string>("robot_base_frame", robot_base_frame, "base_link");
-    bool use_dynamic_path_width;
-    pn.param<bool>("use_dynamic_path_width", use_dynamic_path_width, false);
+    pn.param<string>("robot_base_frame", robot_base_frame, "base_link");  
 
     //固有パラメータ
     //costの傾き costが0から100まで変化する幅[m]
@@ -148,6 +157,9 @@ int main(int argc, char **argv){
     //このパラメータ以上経路から外れた領域のコストを100にする 実質的にロボットが動ける道幅を指定できる[m]
     double cost_wall_width;
     pn.param<double>("path_costmap/cost_wall_width", cost_wall_width, cost_path_width);
+
+    bool use_dynamic_path_width;
+    pn.param<bool>("path_costmap/use_dynamic_path_width", use_dynamic_path_width, false);
 
 
     ros::NodeHandle lSubscriber("");
@@ -240,7 +252,7 @@ int main(int argc, char **argv){
                             nb_dis_num=i;
                         }
                     }
-                    if(path.poses.size()==path_width.data.size()){
+                    if(path.poses.size()==path_width.data.size() && use_dynamic_path_width){
                         costmap.data[gy*gw+gx]=(nn_online_dis_min>path_width.data[nb_dis_num])?100:clip(int(nn_online_dis_min/cost_path_width*100.0),0,100);
                     }
                     else{
