@@ -343,7 +343,7 @@ template<class T> T safety_limit::constrain(T num, T minVal, T maxVal)
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "safety_limit");
-    safety_limit sl;;
+    safety_limit sl;
 
     ros::spin();
     return 0;
