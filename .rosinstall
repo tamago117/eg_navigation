@@ -1,0 +1,38 @@
+- git:
+    local-name: ira_laser_tools
+    uri: https://github.com/iralabdisco/ira_laser_tools.git
+    version: ros1-master
+- git:
+    local-name: hdl_localization
+    uri: https://github.com/koide3/hdl_localization.git
+    version: master
+- git:
+    local-name: ndt_omp
+    uri: https://github.com/koide3/ndt_omp.git
+    version: master
+repositories:
+  iralabdisco/ira_laser_tools:
+    type: git
+    url: git@github.com:iralabdisco/ira_laser_tools.git
+    version: ros1-master
+  koide3/hdl_localization:
+    type: git
+    url: git@github.com:koide3/hdl_localization.git
+    version: master
+  koide3/ndt_omp:
+    type: git
+    url: git@github.com:koide3/ndt_omp.git
+    version: master
+  SMRT-AIST/fast_gicp:
+    type: git
+    url: git@github.com:SMRT-AIST/fast_gicp.git
+    version: master
+  koide3/hdl_global_localization:
+    type: git
+    url: git@github.com:koide3/hdl_global_localization.git
+    version: master
+  at-wat/mcl_3dl:
+    type: git
+    url: git@github.com:at-wat/mcl_3dl.git
+    version: master
+  

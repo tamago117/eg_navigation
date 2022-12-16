@@ -63,6 +63,7 @@ private:
     double recovery_start_time;
 
     double lowMode_speedRatio;
+    double dangerous_cost;
     bool dangerous_potential;
     std::string map_id, base_link_id;
     double max_linear_vel, max_angular_vel;
@@ -106,6 +107,7 @@ safety_limit::safety_limit() :  stop_count(0)
     pnh.param<double>("dt", min_dt, 0.3);
     pnh.param<double>("recovery_start_time", recovery_start_time, 2.0);
     pnh.param<double>("lowMode_speedRatio", lowMode_speedRatio, 0.5);
+    pnh.param<double>("dangerous_cost", dangerous_cost, 1);
     pnh.param<bool>("dangerous_potential", dangerous_potential, true);
     pnh.param<std::string>("map_frame_id", map_id, "map");
     pnh.param<std::string>("base_link_frame_id", base_link_id, "base_link");
@@ -198,7 +200,7 @@ void safety_limit::callback_knn(const sensor_msgs::PointCloud2ConstPtr& pc2){
             if(6*min_dt>1.0){
                 dt = 1.0;
             }else{
-                dt = 6*min_dt;
+                dt = 3*min_dt;
             }
         }else{
             dt = min_dt;
@@ -321,7 +323,7 @@ int safety_limit::getCost(double x, double y)
 
 bool safety_limit::check_around_obstacle(const geometry_msgs::Pose& nowPos)
 {
-    if(getCost(nowPos.position.x, nowPos.position.y)>1){
+    if(getCost(nowPos.position.x, nowPos.position.y)>dangerous_cost){
         return true;
     }else{
         return false;

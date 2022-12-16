@@ -6,7 +6,7 @@ maxYawVel_rate : 120 #[degree/ss]
 v_resolution : 0.2
 w_resolution : 2 #[degree/s]
 dt : 0.1
-predictTime : 3
+predictTime : 5
 angleCost_gain : 0.1
 distanceCost_gain : 0.2
 obstacleCost_gain : 0.4

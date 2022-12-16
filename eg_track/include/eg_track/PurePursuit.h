@@ -44,46 +44,8 @@ PurePursuit::PurePursuit(double wheel_tred_, double max_angular_vel_):wheel_tred
 
 double PurePursuit::getYawVel(geometry_msgs::PoseStamped nowPos, const geometry_msgs::PoseStamped& tarPos, double forwardV)
 {
-    double nowX = nowPos.pose.position.x;//m
-    double nowY = nowPos.pose.position.y;//m
-    double nowYaw = quat2yaw(nowPos.pose.orientation);//rad
-    double tarX = tarPos.pose.position.x;
-    double tarY = tarPos.pose.position.y;
-    
-    double L = sqrt(pow(tarX - nowX, 2) + pow(tarY - nowY, 2));
-
-    //角度が180度を超えないようにする
-    double angle1 = atan2(tarY-nowY, tarX-nowX) - nowYaw + 2*M_PI;
-    double angle2 = atan2(tarY-nowY, tarX-nowX) - nowYaw;
-    double angle3 = atan2(tarY-nowY, tarX-nowX) - nowYaw - 2*M_PI;
-
-    double alfa;
-    if(abs(angle1)<abs(angle2)&&abs(angle1)<abs(angle3)){
-        alfa=angle1;
-    }
-    else if(abs(angle2)<abs(angle1)&&abs(angle2)<abs(angle3)){
-        alfa=angle2;
-    }
-    else if(abs(angle3)<abs(angle1)&&abs(angle3)<abs(angle2)){
-        alfa=angle3;
-    }
-
-    alfa=double_constrain(alfa,-M_PI/2.0,M_PI/2.0);
-
-
-    if(model == car_model::wheel_2){
-        double angular_vel = 2.0*forwardV*sin(alfa)/L;
-        angular_vel = double_constrain(angular_vel, -max_angular_vel, max_angular_vel);
-
-        return angular_vel;
-
-    }else if(model == car_model::steer){
-        double angular_vel = atan2(2*wheel_tred*sin(alfa), L);
-        angular_vel = double_constrain(angular_vel, -max_angular_vel, max_angular_vel);
-
-        return angular_vel;
-    }
-
+    //poseStamped -> pose
+    return getYawVel(nowPos.pose, tarPos.pose, forwardV);
 }
 
 double PurePursuit::getYawVel(const geometry_msgs::Pose& nowPos, const geometry_msgs::Pose& tarPos, double forwardV)
@@ -117,9 +79,19 @@ double PurePursuit::getYawVel(const geometry_msgs::Pose& nowPos, const geometry_
 
 
     if(model == car_model::wheel_2){
-        double angular_vel = 2.0*forwardV*sin(alfa)/L;
-        angular_vel = double_constrain(angular_vel, -max_angular_vel, max_angular_vel);
+        double angular_vel;
+
+        if(alfa >= M_PI/2.0){
+            angular_vel = max_angular_vel;
+        }else if(alfa <= -M_PI/2.0){
+            angular_vel = -max_angular_vel;
+        }else{
+            angular_vel = 2.0*forwardV*sin(alfa)/L;
+            angular_vel = double_constrain(angular_vel, -max_angular_vel, max_angular_vel);
+        }
+
         return angular_vel;
+
     }else if(model == car_model::steer){
         double angular_vel = atan2(2*wheel_tred*sin(alfa), L);
         angular_vel = double_constrain(angular_vel, -max_angular_vel, max_angular_vel);

@@ -10,7 +10,7 @@
         <remap from="cloud_pcd" to="mapcloud" />
     </node>
 
-    <arg name="rvizconfig" default="$(find tvc_navigation)/rviz/map_display.rviz" />
+    <arg name="rvizconfig" default="$(find eg_navigation)/rviz/map_display.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 
 </launch>

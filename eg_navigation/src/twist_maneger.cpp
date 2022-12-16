@@ -118,7 +118,7 @@ int main(int argc, char** argv)
 
                     cmd_vel.linear.x = 0;
                     cmd_vel.angular.z = diffAngle * angleAdjustGain;
-                    if(abs(diffAngle) < 10*M_PI/180){
+                    if(abs(diffAngle) < 30*M_PI/180){
                         run_init = false;
                     }
                 }else{//no angle adjust
@@ -142,7 +142,7 @@ int main(int argc, char** argv)
 
                 cmd_vel.linear.x = 0;
                 cmd_vel.angular.z = diffAngle * angleAdjustGain;
-                if(abs(diffAngle) < 10*M_PI/180){
+                if(abs(diffAngle) < 30*M_PI/180){
                     mode.data = robot_status_str(robot_status::stop);
                     angleAdjustfinish = true;
                 }
