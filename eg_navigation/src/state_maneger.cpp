@@ -71,6 +71,10 @@ int main(int argc, char** argv)
                 lanePlanStop.data = true;
                 astarPlanStop.data = true;
                 recoveryStop.data = true;
+            }else if(mode_array.data[targetWp.data] == (uint8_t)robot_status::stop){
+                lanePlanStop.data = true;
+                astarPlanStop.data = true;
+                recoveryStop.data = true;
             }else if(mode_array.data[targetWp.data] == (uint8_t)robot_status::run){
                 lanePlanStop.data = false;
                 astarPlanStop.data = false;

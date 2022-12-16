@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>309</width>
-    <height>286</height>
+    <height>347</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>0</x>
      <y>0</y>
      <width>311</width>
-     <height>291</height>
+     <height>337</height>
     </rect>
    </property>
    <property name="font">
@@ -28,7 +28,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="standart_tab">
     <attribute name="title">
@@ -39,8 +39,8 @@
       <rect>
        <x>20</x>
        <y>20</y>
-       <width>263</width>
-       <height>195</height>
+       <width>278</width>
+       <height>286</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -108,13 +108,52 @@
            <widget class="QPushButton" name="run">
             <property name="minimumSize">
              <size>
-              <width>120</width>
-              <height>0</height>
+              <width>135</width>
+              <height>160</height>
              </size>
+            </property>
+            <property name="palette">
+             <palette>
+              <active>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>0</red>
+                  <green>255</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </active>
+              <inactive>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>0</red>
+                  <green>255</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </inactive>
+              <disabled>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>0</red>
+                  <green>255</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </disabled>
+             </palette>
             </property>
             <property name="font">
              <font>
-              <pointsize>15</pointsize>
+              <pointsize>30</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
              </font>
             </property>
             <property name="text">
@@ -130,6 +169,43 @@
           </item>
           <item>
            <widget class="QPushButton" name="stop">
+            <property name="palette">
+             <palette>
+              <active>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>255</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </active>
+              <inactive>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>255</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </inactive>
+              <disabled>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>255</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </disabled>
+             </palette>
+            </property>
             <property name="font">
              <font>
               <pointsize>15</pointsize>
@@ -169,7 +245,7 @@
        <x>20</x>
        <y>50</y>
        <width>258</width>
-       <height>123</height>
+       <height>168</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -186,6 +262,17 @@
           </item>
           <item>
            <widget class="QSpinBox" name="spinBox_wayPoint">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>49</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>24</pointsize>
+             </font>
+            </property>
             <property name="maximum">
              <number>999999</number>
             </property>
@@ -195,6 +282,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="restart">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>100</height>
+           </size>
+          </property>
           <property name="font">
            <font>
             <pointsize>15</pointsize>

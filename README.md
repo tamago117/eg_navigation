@@ -3,17 +3,22 @@ ROS meta package for robot 2d/3d navigation
 
 # Requirments
 
-- ROS Melodic
+- ROS noetic
 - Gazebo(ver9.4.0) (for simulation) ->[update gazebo](https://bitbucket.org/DataspeedInc/velodyne_simulator/src/master/gazebo_upgrade.md)
-- [hdl_localization](https://github.com/koide3/hdl_localization) 
-- [ira_laser_tools](https://github.com/iralabdisco/ira_laser_tools.git)
 
 # install
 ```
 cd ~/catkin_ws/src
 git clone https://github.com/tamago117/eg_navigation
 cd ..
-catkin_make
+
+sudo apt update
+sudo apt-get install python3-rosdep
+sudo apt install python3-vcstool
+
+vcs import src < src/eg_navigation/.rosinstall --recursive
+rosdep install -i --from-paths src/eg_navigation
+catkin build
 source ~/catkin_ws/devel/setup.bash
 ```
 
