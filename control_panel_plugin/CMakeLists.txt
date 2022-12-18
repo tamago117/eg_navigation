@@ -35,6 +35,8 @@ set(DEPEND_ROS_PKGS
   pluginlib
   rviz
   std_msgs
+
+  eg_navigation
 )
 
 find_package(catkin REQUIRED

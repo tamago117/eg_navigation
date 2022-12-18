@@ -8,7 +8,7 @@
 #include <pluginlib/class_list_macros.h>
 
 #include <control_panel_plugin/mode_select.h>
-#include <control_panel_plugin/robot_status.h>
+#include <eg_navigation/robot_status.h>
 #include "ui_mode_select.h"
 
 namespace control_panel_plugin

@@ -12,7 +12,7 @@
 #include <std_msgs/ColorRGBA.h>
 #include <std_msgs/Bool.h>
 #include <tf/transform_broadcaster.h>
-#include "eg_planner/tf_position.h"
+#include "eg_navigation/tf_position.h"
 
 nav_msgs::Path path;
 void path_callback(const nav_msgs::Path& path_message)

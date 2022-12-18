@@ -12,7 +12,7 @@
 #include <string>
 #include <iostream>
 #include "eg_track/PurePursuit.h"
-#include "eg_track/tf_position.h"
+#include "eg_navigation/tf_position.h"
 
 geometry_msgs::Pose targetPose;
 void pose_callback(const geometry_msgs::Pose& pose_message)

@@ -10,7 +10,7 @@
 #include <math.h>
 #include "eg_planner/astar_planning.h"
 #include "eg_planner/bezier_curve.h"
-#include "eg_planner/tf_position.h"
+#include "eg_navigation/tf_position.h"
 
 geometry_msgs::PoseStamped goalPoseStamp;
 void poseStamp_callback(const geometry_msgs::PoseStamped& poseStamp_message)

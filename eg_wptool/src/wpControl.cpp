@@ -12,8 +12,8 @@
 #include <nav_msgs/Path.h>
 #include <iostream>
 #include <string>
-#include "eg_wptool/tf_position.h"
-#include "eg_wptool/robot_status.h"
+#include "eg_navigation/tf_position.h"
+#include "eg_navigation/robot_status.h"
 
 //poseStamp間の距離
 double poseStampDistance(const geometry_msgs::PoseStamped& pose1, const geometry_msgs::PoseStamped& pose2)

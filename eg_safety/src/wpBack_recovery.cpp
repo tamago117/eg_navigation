@@ -14,9 +14,9 @@
 #include <std_msgs/Int32.h>
 #include <string>
 #include <iostream>
-#include "eg_safety/robot_status.h"
-#include "eg_safety/PurePursuit.h"
-#include "eg_safety/tf_position.h"
+#include "eg_navigation/robot_status.h"
+#include "eg_track/PurePursuit.h"
+#include "eg_navigation/tf_position.h"
 
 std_msgs::String mode;
 void mode_callback(const std_msgs::String& mode_message)

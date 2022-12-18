@@ -18,7 +18,7 @@
 #include <pcl/point_types.h>
 #include <pcl/kdtree/kdtree_flann.h>
 
-#include "eg_wptool/tf_position.h"
+#include "eg_navigation/tf_position.h"
 
 nav_msgs::Path path;
 void path_callback(const nav_msgs::Path& path_message)

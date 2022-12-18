@@ -22,7 +22,7 @@
 #include <omp.h>
 #include <time.h>
 
-#include <eg_mixed/tf_position.h>
+#include <eg_navigation/tf_position.h>
 
 using namespace std;
 

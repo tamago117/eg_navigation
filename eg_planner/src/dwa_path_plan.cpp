@@ -15,7 +15,7 @@
 #include <geometry_msgs/Pose.h>
 #include <iostream>
 #include "eg_planner/dwa.h"
-#include "eg_planner/tf_position.h"
+#include "eg_navigation/tf_position.h"
 
 bool is_path_topic = false;
 bool is_costmap_topic = false;

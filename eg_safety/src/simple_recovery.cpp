@@ -2,7 +2,7 @@
 #include <std_msgs/String.h>
 #include <geometry_msgs/Twist.h>
 #include <string>
-#include "eg_safety/robot_status.h"
+#include "eg_navigation/robot_status.h"
 
 std_msgs::String mode;
 void mode_callback(const std_msgs::String& mode_message)

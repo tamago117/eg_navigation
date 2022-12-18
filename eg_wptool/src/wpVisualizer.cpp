@@ -14,7 +14,7 @@
 #include <std_msgs/ColorRGBA.h>
 #include <iostream>
 #include <string>
-#include "eg_wptool/robot_status.h"
+#include "eg_navigation/robot_status.h"
 
 const double marker_diameter = 0.1;
 const double marker_height = 0.03;

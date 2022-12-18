@@ -11,7 +11,7 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Pose.h>
 #include "eg_track/PurePursuit.h"
-#include "eg_track/tf_position.h"
+#include "eg_navigation/tf_position.h"
 #include <vector>
 #include <string>
 #include <iostream>

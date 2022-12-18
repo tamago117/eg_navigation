@@ -7,12 +7,17 @@ project(eg_wptool)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+set(CATKIN_DEPENDS
+    roscpp
+    rospy
+    std_msgs
+    tf2_ros
+    pcl_ros
+
+    eg_navigation
+)
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  rospy
-  std_msgs
-  tf2_ros
-  pcl_ros
+${CATKIN_DEPENDS}
 )
 
 ## System dependencies are found with CMake's conventions
@@ -107,7 +112,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES eg_wptool
-  CATKIN_DEPENDS roscpp rospy std_msgs tf2_ros
+  CATKIN_DEPENDS ${CATKIN_DEPENDS}
   DEPENDS system_lib
 )
 

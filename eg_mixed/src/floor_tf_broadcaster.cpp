@@ -14,7 +14,7 @@
 #include <fstream>
 #include <sstream>
 
-#include <eg_mixed/tf_position.h>
+#include <eg_navigation/tf_position.h>
 
 int main(int argc, char **argv){
     

@@ -64,9 +64,6 @@
   <exec_depend>navigation</exec_depend>
   <exec_depend>perception_pcl</exec_depend>
   <exec_depend>joystick_drivers</exec_depend>
-  <exec_depend>navigation</exec_depend>
-  <exec_depend>navigation</exec_depend>
-  <exec_depend>navigation</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

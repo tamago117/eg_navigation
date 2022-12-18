@@ -12,7 +12,7 @@
 #include <string>
 #include <std_msgs/Float32MultiArray.h>
 #include <geometry_msgs/Pose.h>
-#include "eg_wptool/tf_position.h"
+#include "eg_navigation/tf_position.h"
 
 //poseStamp間の距離
 double poseDistance(const geometry_msgs::Pose& pose1, const geometry_msgs::Pose& pose2)

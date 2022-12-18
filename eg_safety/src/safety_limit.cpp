@@ -23,8 +23,8 @@
 #include <visualization_msgs/Marker.h>
 #include <string>
 #include <limits>
-#include "eg_safety/tf_position.h"
-#include "eg_safety/robot_status.h"
+#include "eg_navigation/tf_position.h"
+#include "eg_navigation/robot_status.h"
 
 class safety_limit
 {
