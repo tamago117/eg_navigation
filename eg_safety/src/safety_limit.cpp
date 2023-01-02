@@ -21,6 +21,7 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Bool.h>
 #include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
 #include <string>
 #include <limits>
 #include "eg_navigation/tf_position.h"
@@ -38,7 +39,7 @@ private:
     ros::Publisher mode_pub;
     ros::Publisher linear_vel_pub;
     ros::Publisher angular_vel_pub;
-    ros::Publisher marker_pub;
+    ros::Publisher markerArray_pub;
     // subscribe
     ros::Subscriber cmd_sub;
     ros::Subscriber pc2_sub;
@@ -54,22 +55,23 @@ private:
     int getCost(double x, double y);
     bool check_around_obstacle(const geometry_msgs::Pose& nowPos);
     template<class T> T constrain(T num, T minVal, T maxVal);
+    visualization_msgs::Marker make_marker(float x, float y, int index);
 
-    double g_xmin, g_xmax, g_ymin, g_ymax;
-    double robotRadius;
+    float g_xmin, g_xmax, g_ymin, g_ymax;
+    float robotRadius;
     int g_max_nn; //何点見つかったら探索を打ち切るか。0にすると打ち切らない
     int rate;
-    double min_dt, dt;
-    double recovery_start_time;
+    float estimate_time;
+    float dt;
+    float recovery_start_time;
 
-    double lowMode_speedRatio;
-    double dangerous_cost;
+    float lowMode_speedRatio;
+    float dangerous_cost;
     bool dangerous_potential;
     std::string map_id, base_link_id;
-    double max_linear_vel, max_angular_vel;
+    float max_linear_vel, max_angular_vel;
 
     int stop_count;
-    geometry_msgs::Twist cmd_vel_limit;
     std_msgs::String mode;
     std_msgs::Bool recovery_stop;
 
@@ -86,7 +88,7 @@ safety_limit::safety_limit() :  stop_count(0)
     mode_pub = nh.advertise<std_msgs::String>("safety_limit/mode", 10);
     linear_vel_pub = nh.advertise<std_msgs::Float32>("linear_vel", 10);
     angular_vel_pub = nh.advertise<std_msgs::Float32>("angular_vel", 10);
-    marker_pub = nh.advertise<visualization_msgs::Marker>("safety_limit/next_robot_position", 1);
+    markerArray_pub = nh.advertise<visualization_msgs::MarkerArray>("safety_limit/next_robot_position", 1);
     // subscriber
     cmd_sub = nh.subscribe("safety_limit/cmd_vel_in", 10, &safety_limit::cmd_callback, this);
     recoveryStop_sub = nh.subscribe("safety_limit/recovery_stop", 10, &safety_limit::recoveryStop_callback, this);
@@ -95,19 +97,20 @@ safety_limit::safety_limit() :  stop_count(0)
 
     //set parameter from ros command
     ros::NodeHandle pnh("~");
-    pnh.param<double>("x_max", g_xmax, 5.0);
-    pnh.param<double>("x_min", g_xmin, -0.5);
-    pnh.param<double>("y_max", g_ymax, 0.4);
-    pnh.param<double>("y_min", g_ymin, -0.4);
+    pnh.param<float>("x_max", g_xmax, 5.0);
+    pnh.param<float>("x_min", g_xmin, -0.5);
+    pnh.param<float>("y_max", g_ymax, 0.4);
+    pnh.param<float>("y_min", g_ymin, -0.4);
     pnh.param<int>("max_nn", g_max_nn, 100);
-    pnh.param<double>("robot_radius", robotRadius, 0.5);
+    pnh.param<float>("robot_radius", robotRadius, 0.5);
     pnh.param<int>("loop_rate", rate, 50);
-    pnh.param<double>("max_linear_vel", max_linear_vel, 1.0);
-    pnh.param<double>("max_angular_vel", max_angular_vel, 0.5);
-    pnh.param<double>("dt", min_dt, 0.3);
-    pnh.param<double>("recovery_start_time", recovery_start_time, 2.0);
-    pnh.param<double>("lowMode_speedRatio", lowMode_speedRatio, 0.5);
-    pnh.param<double>("dangerous_cost", dangerous_cost, 1);
+    pnh.param<float>("max_linear_vel", max_linear_vel, 1.0);
+    pnh.param<float>("max_angular_vel", max_angular_vel, 0.5);
+    pnh.param<float>("estimate_time", estimate_time, 0.3);
+    pnh.param<float>("dt", dt, 0.1);
+    pnh.param<float>("recovery_start_time", recovery_start_time, 2.0);
+    pnh.param<float>("lowMode_speedRatio", lowMode_speedRatio, 0.5);
+    pnh.param<float>("dangerous_cost", dangerous_cost, 1);
     pnh.param<bool>("dangerous_potential", dangerous_potential, true);
     pnh.param<std::string>("map_frame_id", map_id, "map");
     pnh.param<std::string>("base_link_frame_id", base_link_id, "base_link");
@@ -122,10 +125,8 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr safety_limit::pass_through(pcl::PointCloud<p
     pcl::PassThrough<pcl::PointXYZ> pass;
     pass.setInputCloud (cloud);
     pass.setFilterFieldName (iaxis);
-    // pass.setFilterFieldName ("x");
     pass.setFilterLimits (imin, imax);
     pass.filter(*cloud_filtered);
-    // printf("%f\n",cloud->points.size());
     return cloud_filtered;
 }
 
@@ -141,6 +142,9 @@ void safety_limit::recoveryStop_callback(const std_msgs::Bool recoveryStop_messa
 
 // callback
 void safety_limit::callback_knn(const sensor_msgs::PointCloud2ConstPtr& pc2){
+    visualization_msgs::MarkerArray marker_array;
+    geometry_msgs::Twist cmd_vel_limit;
+
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_nan (new pcl::PointCloud<pcl::PointXYZ>); // NaN値あり
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>); // NaN値なし
 
@@ -167,11 +171,11 @@ void safety_limit::callback_knn(const sensor_msgs::PointCloud2ConstPtr& pc2){
         }
 
         //treeも2Dで作る
-        pcl::KdTreeFLANN<pcl::PointXY>::Ptr tree2d (new pcl::KdTreeFLANN<pcl::PointXY>);
+        pcl::KdTreeFLANN<pcl::PointXY>::Ptr tree2d(new pcl::KdTreeFLANN<pcl::PointXY>);
         tree2d->setInputCloud(cloud2d);
 
         //近傍点探索に使うパラメータと結果が入る変数
-        double radius = g_xmax; //半径r
+        float radius = g_xmax; //半径r
         unsigned int max_nn = g_max_nn; //何点見つかったら探索を打ち切るか。0にすると打ち切らない
         std::vector<int> k_indices; //範囲内の点のインデックスが入る
         std::vector<float> k_distances; //範囲内の点の距離が入る
@@ -195,85 +199,62 @@ void safety_limit::callback_knn(const sensor_msgs::PointCloud2ConstPtr& pc2){
         }
         ROS_ASSERT(max_nn > 1);
 
-        //safety時それ以上ぶつからないように＆抜け出しやすいように予測時間を大げさにする
-        if(mode.data == robot_status_str(robot_status::safety_stop)){
-            if(6*min_dt>1.0){
-                dt = 1.0;
-            }else{
-                dt = 3*min_dt;
-            }
-        }else{
-            dt = min_dt;
-        }
+        mode.data = robot_status_str(robot_status::run);
         
-        double next_robot_yaw = cmd_vel.angular.z * dt;
-        double next_robot_x = cmd_vel.linear.x * cos(next_robot_yaw) * dt;
-        double next_robot_y = cmd_vel.linear.x * sin(next_robot_yaw) * dt;
+        // estimate future robot pose
+        float next_robot_yaw = 0;
+        float next_robot_x = 0;
+        float next_robot_y = 0;
+        int estimate_num = estimate_time/dt;
+        marker_array.markers.resize(estimate_num);
+        for(int i = 0; i < estimate_num; ++i){
+            next_robot_yaw += cmd_vel.angular.z * dt;
+            next_robot_x += cmd_vel.linear.x * cos(next_robot_yaw) * dt;
+            next_robot_y += cmd_vel.linear.x * sin(next_robot_yaw) * dt;
 
-        visualization_msgs::Marker marker;	mode.data = robot_status_str(robot_status::run);
-        marker.header.frame_id = base_link_id;
-        marker.header.stamp = ros::Time::now();
-        marker.ns = "next_robot_position";
-        marker.id = 0;
-        marker.type = visualization_msgs::Marker::CYLINDER;
-        marker.action = visualization_msgs::Marker::ADD;
-        marker.lifetime = ros::Duration(0.01);
-        //visualize next robot position
-        marker.scale.x = robotRadius*2;
-        marker.scale.y = robotRadius*2;
-        marker.scale.z = 0.01;
-        marker.pose.position.x = next_robot_x;
-        marker.pose.position.y = next_robot_y;
-        marker.pose.position.z = 0;
-        marker.pose.orientation.x = 0;
-        marker.pose.orientation.y = 0;
-        marker.pose.orientation.z = 0;
-        marker.pose.orientation.w = 1;
-        marker.color.r = 1.0f;
-        marker.color.g = 0.0f;
-        marker.color.b = 0.0f;
-        marker.color.a = 1.0f;
-        marker_pub.publish(marker);
+            marker_array.markers[i] = make_marker(next_robot_x, next_robot_y, i);
 
-        for(int i=0; i<k_indices.size(); i++){
-            double point_x = cloud->points[k_indices[i]].x;
-            double point_y = cloud->points[k_indices[i]].y;
-            double r = sqrt(pow(point_x - next_robot_x, 2) + pow(point_y - next_robot_y, 2));
+            for(const auto ind : k_indices){
+                float point_x = cloud->points[ind].x;
+                float point_y = cloud->points[ind].y;
+                float r = sqrt(pow(point_x - next_robot_x, 2) + pow(point_y - next_robot_y, 2));
 
-            //次点のロボットのエリアに点群が入るようならストップ
-            if(r < robotRadius){
-                cmd_vel_limit.linear.x = 0;
-                cmd_vel_limit.angular.z = 0;
+                //次点のロボットのエリアに点群が入るようならストップ
+                if(r < robotRadius){
+                    cmd_vel_limit.linear.x = 0;
+                    cmd_vel_limit.angular.z = 0;
 
-                ROS_INFO("robot safety stop");
-                mode.data = robot_status_str(robot_status::safety_stop);
+                    ROS_INFO("robot safety stop");
+                    mode.data = robot_status_str(robot_status::safety_stop);
 
-                //一定のカウントでrecoveryに入る
-                if(not(recovery_stop.data)){
-                    stop_count++;
-                    if(stop_count > (int)(recovery_start_time*rate)){
-                        ROS_INFO("robot recovery behaviour");
-                        mode.data = robot_status_str(robot_status::recovery);
-                        //dt分recoveryをpublish
-                        if(stop_count > (int)((recovery_start_time+min_dt)*rate)){
-                            stop_count = 0;
+                    //一定のカウントでrecoveryに入る
+                    if(not(recovery_stop.data)){
+                        stop_count++;
+                        if(stop_count > (int)(recovery_start_time*rate)){
+                            ROS_INFO("robot recovery behaviour");
+                            mode.data = robot_status_str(robot_status::recovery);
+                            //dt分recoveryをpublish
+                            if(stop_count > (int)((recovery_start_time+estimate_time)*rate)){
+                                stop_count = 0;
+                            }
                         }
                     }
+
+                    linear_vel.data = cmd_vel_limit.linear.x;
+                    angular_vel.data = cmd_vel_limit.angular.z;
+
+                    cmd_pub.publish(cmd_vel_limit);
+                    linear_vel_pub.publish(linear_vel);
+                    angular_vel_pub.publish(angular_vel);
+                    mode_pub.publish(mode);
+                    markerArray_pub.publish(marker_array);
+                    return;
                 }
-
-                linear_vel.data = cmd_vel_limit.linear.x;
-                angular_vel.data = cmd_vel_limit.angular.z;
-
-                cmd_pub.publish(cmd_vel_limit);
-                linear_vel_pub.publish(linear_vel);
-                angular_vel_pub.publish(angular_vel);
-                mode_pub.publish(mode);
-                return;
             }
         }
+
         //衝突判定に引っかからなければcountを初期化
         stop_count = 0;
-
     }
 
     //potential check
@@ -287,8 +268,8 @@ void safety_limit::callback_knn(const sensor_msgs::PointCloud2ConstPtr& pc2){
         }
     }
 
-    cmd_vel_limit.linear.x = constrain(cmd_vel_limit.linear.x, -max_linear_vel, max_linear_vel);
-    cmd_vel_limit.angular.z = constrain(cmd_vel_limit.angular.z, -max_angular_vel, max_angular_vel);
+    cmd_vel_limit.linear.x = constrain((float)cmd_vel_limit.linear.x, -max_linear_vel, max_linear_vel);
+    cmd_vel_limit.angular.z = constrain((float)cmd_vel_limit.angular.z, -max_angular_vel, max_angular_vel);
 
     linear_vel.data = cmd_vel_limit.linear.x;
     angular_vel.data = cmd_vel_limit.angular.z;
@@ -299,6 +280,7 @@ void safety_limit::callback_knn(const sensor_msgs::PointCloud2ConstPtr& pc2){
     linear_vel_pub.publish(linear_vel);
     angular_vel_pub.publish(angular_vel);
     mode_pub.publish(mode);
+    markerArray_pub.publish(marker_array);
 }
 
 void safety_limit::cost_callback(const nav_msgs::OccupancyGrid& costmap_message)
@@ -340,6 +322,35 @@ template<class T> T safety_limit::constrain(T num, T minVal, T maxVal)
     }
 
     return num;
+}
+
+visualization_msgs::Marker safety_limit::make_marker(float x, float y, int index)
+{
+    visualization_msgs::Marker marker;
+    marker.header.frame_id = base_link_id;
+    marker.header.stamp = ros::Time::now();
+    marker.ns = "next_robot_position";
+    marker.id = index;
+    marker.type = visualization_msgs::Marker::CYLINDER;
+    marker.action = visualization_msgs::Marker::ADD;
+    marker.lifetime = ros::Duration(0.5);
+    //visualize next robot position
+    marker.scale.x = robotRadius*2;
+    marker.scale.y = robotRadius*2;
+    marker.scale.z = 0.01;
+    marker.pose.position.x = x;
+    marker.pose.position.y = y;
+    marker.pose.position.z = 0;
+    marker.pose.orientation.x = 0;
+    marker.pose.orientation.y = 0;
+    marker.pose.orientation.z = 0;
+    marker.pose.orientation.w = 1;
+    marker.color.r = 1.0f;
+    marker.color.g = 0.0f;
+    marker.color.b = 0.0f;
+    marker.color.a = 1.0f;
+
+    return marker;
 }
 
 int main(int argc, char** argv)
