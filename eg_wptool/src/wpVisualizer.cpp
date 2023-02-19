@@ -65,8 +65,8 @@ int main(int argc, char** argv)
 
     ros::Publisher marker_pub = nh.advertise<visualization_msgs::MarkerArray>("wayPoint/marker", 10);
     ros::Publisher markerText_pub = nh.advertise<visualization_msgs::MarkerArray>("wayPoint/markerText", 10);
-    ros::Subscriber targetWp_sub = nh.subscribe("targetWp", 50, targetWp_callback);
-    ros::Subscriber path_sub = nh.subscribe("path", 50, path_callback);
+    ros::Subscriber targetWp_sub = nh.subscribe("wayPoint/targetWp", 50, targetWp_callback);
+    ros::Subscriber path_sub = nh.subscribe("wayPoint/path", 50, path_callback);
     ros::Subscriber wpMode_sub = nh.subscribe("wayPoint/mode", 10, wpMode_callback);
 
     double markerSize;

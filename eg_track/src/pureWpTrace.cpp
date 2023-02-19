@@ -134,9 +134,9 @@ int main(int argc, char** argv)
     double maxCurvature;
     pnh.param<double>("maxCurvature", maxCurvature, 3);
 
-    ros::Subscriber targetWp_sub = nh.subscribe("targetWp", 50, targetWp_callback);
-    ros::Subscriber path_sub = nh.subscribe("path", 50, path_callback);
-    ros::Publisher cmd_pub = nh.advertise<geometry_msgs::Twist>("roomba/cmd_vel", 10);
+    ros::Subscriber targetWp_sub = nh.subscribe("wayPoint/targetWp", 50, targetWp_callback);
+    ros::Subscriber path_sub = nh.subscribe("wayPoint/path", 50, path_callback);
+    ros::Publisher cmd_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 10);
 
     ctr::PurePursuit pure_pursuit(max_angular_vel);
     tf_position nowPosition(map_id, base_link_id, rate);

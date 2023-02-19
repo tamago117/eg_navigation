@@ -1,123 +1,186 @@
 /**
-* @file wpControll.cpp
-* @brief select target way point
+* @file wpControl.cpp
+* @brief control target way point
 * @author Michikuni Eguchi
-* @date 2021.7.29
-* @details 位置情報やインタフェースからpublishするtarget way point を選ぶ
+* @date 2021.9.21
+* @details 位置情報からpublishするtarget way pointとなるpose を選ぶ
+*          (等間隔で設定されてない5〜10mの少し離れた間隔のwp pointをもとにする)
 */
 #include <ros/ros.h>
 #include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Bool.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/Pose.h>
 #include <nav_msgs/Path.h>
-#include <iostream>
+#include <std_msgs/UInt8MultiArray.h>
 #include <string>
 #include "eg_navigation/tf_position.h"
 #include "eg_navigation/robot_status.h"
+#include "eg_navigation/util.h"
+#include "eg_planner/cubic_spline2d.hpp"
 
-//poseStamp間の距離
-double poseStampDistance(const geometry_msgs::PoseStamped& pose1, const geometry_msgs::PoseStamped& pose2)
+
+class wpControl
 {
-    double diffX = pose1.pose.position.x - pose2.pose.position.x;
-    double diffY = pose1.pose.position.y - pose2.pose.position.y;
-    double diffZ = pose1.pose.position.z - pose2.pose.position.z;
+    public:
+        wpControl();
+        void update();
 
-    return sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
-}
+    private:
+        ros::NodeHandle nh;
+        ros::NodeHandle pnh;
 
-template<class T> T constrain(T num, double minVal, double maxVal)
+        ros::Subscriber path_sub;
+        ros::Subscriber wpMode_sub;
+        ros::Subscriber successPlan_sub;
+        ros::Subscriber mode_sub;
+        ros::Subscriber wpSet_sub;
+        ros::Publisher tarWp_pub;
+        ros::Publisher tarPos_pub;
+        ros::Publisher mode_pub;
+
+        // parameters
+        std::string map_id, base_link_id;
+        double target_deviation, fin_tar_deviation;
+        double failed_tar_deviation_rate;
+        double rate;
+
+        nav_msgs::Path path;
+        void path_callback(const nav_msgs::Path path_message){
+            path = path_message;
+        }
+
+        std_msgs::UInt8MultiArray mode_array;
+        void wpMode_callback(const std_msgs::UInt8MultiArray& modeArray_message){
+            mode_array = modeArray_message;
+        }
+
+        bool isSuccessPlanning = true;
+        int failedPlanCount = 0;
+        void successPlan_callback(const std_msgs::Bool successPlan_message){
+            isSuccessPlanning = successPlan_message.data;
+        }
+
+        std_msgs::String mode_in;
+        void mode_callback(const std_msgs::String& mode_message){
+            mode_in = mode_message;
+        }
+
+        std_msgs::Int32 targetWp;
+        void wayPoint_set_callback(const std_msgs::Int32 wpset_message){
+            targetWp = wpset_message;
+        }
+
+        //poseStamp間の距離
+        double poseStampDistance(const geometry_msgs::PoseStamped& pose1, const geometry_msgs::PoseStamped& pose2)
+        {
+            double diffX = pose1.pose.position.x - pose2.pose.position.x;
+            double diffY = pose1.pose.position.y - pose2.pose.position.y;
+            //double diffZ = pose1.pose.position.z - pose2.pose.position.z;
+
+            //return sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
+            return sqrt(diffX * diffX + diffY * diffY);
+        }
+
+};
+
+wpControl::wpControl() : pnh("~")
 {
-    if(num > maxVal){
-        num = maxVal;
-    }
-    if(num < minVal){
-        num = minVal;
-    }
-
-    return num;
-}
-
-int targetWp = 0;
-void targetWp_callback(const std_msgs::Int32& targetWp_num)
-{
-    targetWp = targetWp_num.data;
-}
-
-nav_msgs::Path path;
-void path_callback(const nav_msgs::Path path_message)
-{
-    path = path_message;
-}
-
-int main(int argc, char** argv)
-{
-    ros::init(argc, argv, "wpControll");
-    ros::NodeHandle nh;
-    ros::NodeHandle pnh("~");
-
-    std::string map_id, base_link_id;
     pnh.param<std::string>("map_frame_id", map_id, "map");
     pnh.param<std::string>("base_link_frame_id", base_link_id, "base_link");
-    double target_pitch, wp_pitch, tar_deviation;
-    pnh.param<double>("target_pitch", target_pitch, 1.0);
-    pnh.param<double>("waypoint_pitch", wp_pitch, 0.1);
-    pnh.param<double>("target_deviation", tar_deviation, 0.05);
-    double rate;
+    pnh.param<double>("target_deviation", target_deviation, 0.5);
+    pnh.param<double>("final_target_deviation", fin_tar_deviation, 0.1);
+    pnh.param<double>("failed_target_deviation_rate", failed_tar_deviation_rate, 2);
     pnh.param<double>("loop_rate", rate, 100);
-    double maxSpeed;
-    pnh.param<double>("max_speed", maxSpeed, 1.0);
 
+    // subscriber
+    path_sub = nh.subscribe("wayPoint/path", 50, &wpControl::path_callback, this);
+    wpMode_sub = nh.subscribe("wayPoint/mode", 10, &wpControl::wpMode_callback, this);
+    successPlan_sub = nh.subscribe("successPlan", 10, &wpControl::successPlan_callback, this);
+    mode_sub = nh.subscribe("mode", 10 , &wpControl::mode_callback, this);
+    wpSet_sub = nh.subscribe("wayPoint/set", 10, &wpControl::wayPoint_set_callback, this);
+    // publisher
+    tarWp_pub = nh.advertise<std_msgs::Int32>("wayPoint/targetWp", 10);
+    tarPos_pub = nh.advertise<geometry_msgs::PoseStamped>("wayPoint/targetWpPose", 10);
+    mode_pub = nh.advertise<std_msgs::String>("mode_select/mode", 10);
+}
+
+void wpControl::update()
+{
     tf_position nowPosition(map_id, base_link_id, rate);
-
-    ros::Subscriber path_sub = nh.subscribe("path", 50, path_callback);
-    ros::Publisher tarWp_pub = nh.advertise<std_msgs::Int32>("targetWp", 10);
-    ros::Publisher nowWp_pub = nh.advertise<std_msgs::Int32>("nowWp", 10);
-    ros::Publisher mode_pub = nh.advertise<std_msgs::String>("mode_select/mode", 10);
-
     ros::Rate loop_rate(rate);
 
-    bool trace_wp_mode = true;
-    std_msgs::Int32 targetWp;
-    std_msgs::Int32 nowWp;
+    std_msgs::String mode_out;
+    mode_out.data = robot_status_str(robot_status::angleAdjust);
 
-    std_msgs::String mode;
-    mode.data = robot_status_str(robot_status::angleAdjust);
-    bool isReach = false;
+    targetWp.data = 0;
     while(ros::ok())
     {
         if(path.poses.size()>0){
-            if(trace_wp_mode){
-                //target_pitchになるよう target way pointの更新
-                while(!(poseStampDistance(path.poses[targetWp.data], nowPosition.getPoseStamped()) >= target_pitch))
-                {
-                    //end point
-                    if(targetWp.data >= (path.poses.size()-1)){
-                        break;
+
+            // if planning fail, increase the target deviation
+            double target_deviation_;
+            if(isSuccessPlanning){
+                target_deviation_ = target_deviation;
+            }else{
+                target_deviation_ = failed_tar_deviation_rate * target_deviation;
+            }
+
+            // update target way point
+            while(!(poseStampDistance(path.poses[targetWp.data], nowPosition.getPoseStamped()) >= target_deviation_))
+            {
+                // end point
+                if(targetWp.data > path.poses.size()-1){
+                    targetWp.data = path.poses.size()-1;
+                    break;
+                }
+                // stop point
+                if(mode_array.data.at(targetWp.data) == (uint8_t)robot_status::stop){
+                    break;
+                }
+                targetWp.data++;
+            }
+
+            // interpolate from current position to target way point
+            
+
+            // update target point
+
+
+            // angle adjust at specific wp
+            // distance
+            if(!(mode_in.data==robot_status_str(robot_status::angleAdjust) and mode_in.data==robot_status_str(robot_status::stop))){
+                if(poseStampDistance(path.poses[targetWp.data], nowPosition.getPoseStamped()) <= fin_tar_deviation){
+                    mode_pub.publish(mode_out);
+
+                    if(!(targetWp.data >= (path.poses.size()-1))){
+                        targetWp.data++;
                     }
-                    targetWp.data++;
+
                 }
             }
+
+            geometry_msgs::PoseStamped tarPos;
+            tarPos.header.frame_id = path.header.frame_id;
+            tarPos.header.stamp = ros::Time::now();
+            tarPos.pose = path.poses[targetWp.data].pose;
+
+            tarPos_pub.publish(tarPos);
+            tarWp_pub.publish(targetWp);
+
         }
-
-        if(targetWp.data >= (path.poses.size()-1)){
-            //distance
-            if(!isReach){
-                if(poseStampDistance(path.poses[targetWp.data], nowPosition.getPoseStamped()) <= tar_deviation){
-                    //isReach = true;
-                    mode_pub.publish(mode);
-                }
-            }
-        }
-
-        double dt = 0.2;
-        nowWp.data = targetWp.data - (target_pitch + maxSpeed*dt)/wp_pitch;
-        nowWp.data = constrain(nowWp.data, 0.0, path.poses.size());
-
-        tarWp_pub.publish(targetWp);
-        nowWp_pub.publish(nowWp);
 
         ros::spinOnce();
         loop_rate.sleep();
     }
+}
+
+int main(int argc, char** argv)
+{
+    ros::init(argc, argv, "wpControl");
+    wpControl wp_c;
+    wp_c.update();
+
     return 0;
 }

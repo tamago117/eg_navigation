@@ -34,18 +34,15 @@
         <param name="map_frame_id" value="map"/>
     </node>
     <node name="wpVisualizer" pkg="eg_wptool" type="wpVisualizer">
-        <remap from="path" to="wayPoint/path"/>
         <param name="markerSize" value="5.0"/>
     </node>
-    <node name="wpSelect" pkg="eg_wptool" type="wpSelect">
+    <node name="wpControl" pkg="eg_wptool" type="wpControl">
         <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
-        <param name="maxVelocity" value="1.0"/>
         <param name="loop_rate" value="20"/>
         <param name="target_deviation" value="1.5"/>
         <param name="final_target_deviation" value="0.5"/>
         <param name="failed_target_deviation_rate" value="4.0"/>
-        <remap from="path" to="wayPoint/path"/>
         <remap from="successPlan" to="astar_planning_node/successPlan"/>
     </node>
 
@@ -64,7 +61,7 @@
 
     <node name="astar_planning_node" pkg="eg_planner" type="astar_planning_node" output="screen">
         <rosparam command="load" file="$(find eg_navigation)/config/astar_planning.yaml" />
-        <remap from="astar_planning_node/goal" to="targetWpPose"/>
+        <remap from="astar_planning_node/goal" to="wayPoint/targetWpPose"/>
         <remap from="astar_planning_node/costmap" to="costmap_node/merged_costmap"/>
     </node>
 
@@ -86,7 +83,6 @@
         <remap from="pure_posePursuit/pose_in" to="lane_planner/pose_out"/>
     </node>
 
-
     <node name="wpBack_recovery" pkg="eg_safety" type="wpBack_recovery" output="screen">
         <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
@@ -96,14 +92,7 @@
         <param name="duration" value="6.0"/>
         <param name="recovery_leastDistance" value="2.0"/>
         <param name="fin_recovery_deviation" value="0.2"/>
-        <remap from="path" to="wayPoint/path"/>
     </node>
-
-    <!--<node pkg="eg_safety" name="simple_recovery" type="simple_recovery">
-        <param name="linear_vel" value="-0.3"/>
-        <param name="angular_vel" value="0"/>
-        <param name="duration" value="1.5"/>
-    </node>-->
 
     <node name="twist_maneger" pkg="eg_navigation" type="twist_maneger">
         <param name="base_link_frame_id" value="base_link"/>
@@ -112,7 +101,6 @@
         <remap from="twist_maneger/targetWpPose_in" to="targetWpPose"/>
         <remap from="twist_maneger/targetPose_in" to="lane_planner/pose_out"/>
         <remap from="cmd_vel" to="pure_posePursuit/cmd_vel"/>
-        <remap from="waypoint/now" to="targetWp"/>
     </node>
     <node name="state_maneger" pkg="eg_navigation" type="state_maneger">
         <param name="loop_rate" value="10"/>

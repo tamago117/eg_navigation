@@ -33,20 +33,17 @@
         <param name="map_frame_id" value="map"/>
     </node>
     <node name="wpVisualizer" pkg="eg_wptool" type="wpVisualizer">
-        <remap from="path" to="wayPoint/path"/>
         <param name="markerSize" value="5.0"/>
     </node>
    <!--<node name="wpIdentify" pkg="eg_wptool" type="wpIdentify" output="screen">
         <remap from="path" to="wayPoint/path"/>
     </node>-->
-    <node name="wpSelect" pkg="eg_wptool" type="wpSelect">
+    <node name="wpControl" pkg="eg_wptool" type="wpControl">
         <param name="base_link_frame_id" value="base_link"/>
         <param name="map_frame_id" value="map"/>
-        <param name="maxVelocity" value="0.7"/>
         <param name="loop_rate" value="20"/>
         <param name="target_deviation" value="1.5"/>
         <param name="final_target_deviation" value="0.4"/>
-        <remap from="path" to="wayPoint/path"/>
         <remap from="successPlan" to="astar_planning_node/successPlan"/>
     </node>
 
@@ -65,7 +62,7 @@
 
     <node name="astar_planning_node" pkg="eg_planner" type="astar_planning_node" output="screen">
         <rosparam command="load" file="$(find eg_navigation)/config/astar_planning.yaml" />
-        <remap from="astar_planning_node/goal" to="targetWpPose"/>
+        <remap from="astar_planning_node/goal" to="wayPoint/targetWpPose"/>
         <remap from="astar_planning_node/costmap" to="costmap_node/merged_costmap"/>
     </node>
 
@@ -97,7 +94,6 @@
         <param name="duration" value="6.0"/>
         <param name="recovery_leastDistance" value="2.0"/>
         <param name="fin_recovery_deviation" value="0.2"/>
-        <remap from="path" to="wayPoint/path"/>
     </node>
 
     <!--<node pkg="eg_safety" name="simple_recovery" type="simple_recovery">
@@ -113,7 +109,6 @@
         <remap from="twist_maneger/targetWpPose_in" to="targetWpPose"/>
         <remap from="twist_maneger/targetPose_in" to="lane_planner/pose_out"/>
         <remap from="cmd_vel" to="pure_posePursuit/cmd_vel"/>
-        <remap from="waypoint/now" to="targetWp"/>
     </node>
     <!--safety function-->
     <node pkg="eg_mixed" name="laser2pc" type="laser2pc"/>

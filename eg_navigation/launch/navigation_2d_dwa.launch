@@ -33,7 +33,6 @@
         <param name="map_frame_id" value="map"/>
     </node>
     <node name="wpVisualizer" pkg="eg_wptool" type="wpVisualizer">
-        <remap from="path" to="wayPoint/path"/>
         <param name="markerSize" value="5.0"/>
     </node>
    <!--<node name="wpIdentify" pkg="eg_wptool" type="wpIdentify" output="screen">
@@ -46,7 +45,6 @@
         <param name="loop_rate" value="20"/>
         <param name="target_deviation" value="1.5"/>
         <param name="final_target_deviation" value="0.4"/>
-        <remap from="path" to="wayPoint/path"/>
         <remap from="successPlan" to="astar_planning_node/successPlan"/>
     </node>
 
@@ -66,9 +64,8 @@
 
     <node name="dwa_path_plan" pkg="eg_planner" type="dwa_path_plan" output="screen">
         <rosparam command="load" file="$(find eg_navigation)/config/dwa.yaml" />
-        <remap from="dwa_path_plan/goal" to="targetWp"/>
+        <remap from="dwa_path_plan/goal" to="wayPoint/targetWp"/>
         <remap from="dwa_path_plan/costmap" to="costmap_node/my_costmap/costmap"/>
-        <remap from="path" to="wayPoint/path"/>
     </node>
 
 
@@ -81,7 +78,6 @@
         <param name="duration" value="6.0"/>
         <param name="recovery_leastDistance" value="2.0"/>
         <param name="fin_recovery_deviation" value="0.2"/>
-        <remap from="path" to="wayPoint/path"/>
     </node>
 
     <!--<node pkg="eg_safety" name="simple_recovery" type="simple_recovery">
@@ -97,7 +93,6 @@
         <remap from="twist_maneger/targetWpPose_in" to="targetWpPose"/>
         <remap from="twist_maneger/targetPose_in" to="lane_planner/pose_out"/>
         <remap from="cmd_vel" to="dwa_path_plan/cmd_vel"/>
-        <remap from="waypoint/now" to="targetWp"/>
     </node>
     <!--safety function-->
     <node pkg="eg_mixed" name="laser2pc" type="laser2pc"/>

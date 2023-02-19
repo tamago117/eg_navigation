@@ -154,7 +154,7 @@ Visualization Manager:
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /wayPoint/marker
-      Name: MarkerArray
+      Name: wpMarker
       Namespaces:
         waypoint_marker: true
       Queue Size: 100
@@ -162,7 +162,7 @@ Visualization Manager:
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /wayPoint/markerText
-      Name: MarkerText
+      Name: wpText
       Namespaces:
         waypoint_marker: true
       Queue Size: 100
@@ -170,8 +170,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: -0.5298399329185486
-        Min Value: -0.9201473593711853
+        Max Value: -0.5282665491104126
+        Min Value: -0.9226749539375305
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -198,8 +198,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 17.54906463623047
-        Min Value: -1.616658091545105
+        Max Value: 14.94156551361084
+        Min Value: -1.2538790702819824
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -285,23 +285,6 @@ Visualization Manager:
                   {}
       Update Interval: 0
       Value: true
-    - Alpha: 1
-      Arrow Length: 0.6000000238418579
-      Axes Length: 0.30000001192092896
-      Axes Radius: 0.009999999776482582
-      Class: rviz/PoseArray
-      Color: 255; 25; 0
-      Enabled: true
-      Head Length: 0.07000000029802322
-      Head Radius: 0.029999999329447746
-      Name: PoseArray
-      Queue Size: 10
-      Shaft Length: 0.23000000417232513
-      Shaft Radius: 0.009999999776482582
-      Shape: Arrow (Flat)
-      Topic: /mcl_3dl/particles
-      Unreliable: false
-      Value: true
     - Class: jsk_rviz_plugin/PieChart
       Enabled: true
       Name: velocity
@@ -370,7 +353,7 @@ Visualization Manager:
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /lane_planner/marker_array
-      Name: MarkerArray
+      Name: laneplannerMarker
       Namespaces:
         plannig_point: true
       Queue Size: 99
@@ -379,7 +362,7 @@ Visualization Manager:
       Class: rviz/Polygon
       Color: 25; 255; 0
       Enabled: true
-      Name: Polygon
+      Name: footprint
       Queue Size: 10
       Topic: /costmap_node/my_costmap/footprint
       Unreliable: false
@@ -407,14 +390,6 @@ Visualization Manager:
       Shaft Length: 0.10000000149011612
       Topic: /astar_planning_node/path
       Unreliable: false
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /safety_limit/next_robot_position
-      Name: Marker
-      Namespaces:
-        {}
-      Queue Size: 100
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -476,7 +451,7 @@ Visualization Manager:
       Enabled: true
       Name: TargetVisualizer
       Queue Size: 10
-      Topic: /targetWpPose
+      Topic: /wayPoint/targetWpPose
       Unreliable: false
       Value: true
       alpha: 0.800000011920929
@@ -494,6 +469,14 @@ Visualization Manager:
       Unreliable: false
       Use Timestamp: false
       Value: false
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /safety_limit/next_robot_position
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -522,7 +505,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 22.239004135131836
+      Distance: 17.241056442260742
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -530,17 +513,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 5.11294412612915
-        Y: 0.7594143748283386
-        Z: 5.980768203735352
+        X: 1.6648304462432861
+        Y: -1.979177474975586
+        Z: 5.347653388977051
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.3697965145111084
+      Pitch: 1.0347968339920044
       Target Frame: base_link
-      Yaw: 3.025385618209839
+      Yaw: 3.0753865242004395
     Saved: ~
 Window Geometry:
   Displays:
@@ -548,7 +531,7 @@ Window Geometry:
   Height: 1043
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000015600000379fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003b0000024a000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb00000014006d006f0064006500530065006c006500630074010000028b000001290000001600ffffff000000010000010f00000379fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003b00000379000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007380000003efc0100000002fb0000000800540069006d00650100000000000007380000024400fffffffb0000000800540069006d00650100000000000004500000000000000000000004c70000037900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000001ab00000379fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003b0000024a000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb00000014006d006f0064006500530065006c006500630074010000028b000001290000001600ffffff000000010000010f00000379fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003b00000379000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000007800000003efc0100000002fb0000000800540069006d00650100000000000007800000024400fffffffb0000000800540069006d00650100000000000004500000000000000000000004ba0000037900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -557,8 +540,8 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1848
-  X: 72
-  Y: 78
+  Width: 1920
+  X: 1920
+  Y: 0
   modeSelect:
     collapsed: false

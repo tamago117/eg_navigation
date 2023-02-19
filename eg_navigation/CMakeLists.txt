@@ -38,9 +38,10 @@ include_directories(
 )
 
 ## Declare a C++ library
-#add_library(eg_navigation
-#  src/robot_status.cpp
-#)
+add_library(eg_navigation
+  src/tf_position.cpp
+  src/robot_status.cpp
+)
 
 #add_library(tf_position
 #  src/tf_position.cpp

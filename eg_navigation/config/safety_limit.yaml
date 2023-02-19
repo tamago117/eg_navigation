@@ -1,12 +1,15 @@
-max_nn : 100
-robot_radius : 0.6
-x_max : 1.0
-x_min : -1.0
-y_max : 0.6
-y_min : -0.6
+max_nn : 200
+robot_radius : 0.45
+x_max : 3.0
+x_min : -3.0
+y_max : 3.0
+y_min : -3.0
 loop_rate : 50
-dt : 0.5
-max_linear_vel : 1.2
-max_angular_vel : 0.6
+estimate_time : 1.5
+dt : 0.1
+max_linear_vel : 1.3
+max_angular_vel : 0.8
 recovery_start_time : 0.3
+dangerous_cost : 3 #1~90
 dangerous_potential : true
+lowMode_speedRatio : 0.60

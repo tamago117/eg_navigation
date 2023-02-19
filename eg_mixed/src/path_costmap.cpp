@@ -167,12 +167,12 @@ int main(int argc, char **argv){
     //Path subscliber
     ros::Subscriber path_sub = lSubscriber.subscribe("wayPoint/path", 50, path_callback);
     //Now subscliber
-    ros::Subscriber now_wp_sub = lSubscriber.subscribe("targetWp", 50, now_wp_callback);
+    ros::Subscriber now_wp_sub = lSubscriber.subscribe("wayPoint/targetWp", 50, now_wp_callback);
     //Now subscliber
     ros::Subscriber path_width_sub = lSubscriber.subscribe("wayPoint/pathWidth", 50, path_width_callback);
 
     //costmap publisher
-    ros::Publisher costmap_pub=n.advertise<nav_msgs::OccupancyGrid>("/costmap_node/path_costmap", 1);
+    ros::Publisher costmap_pub=n.advertise<nav_msgs::OccupancyGrid>("costmap_node/path_costmap", 1);
     
     //Now pose from TF
     tf_position nowPosition(global_frame, robot_base_frame, publish_frequency);

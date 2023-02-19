@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 
     ros::Subscriber wpMode_sub = nh.subscribe("wayPoint/mode", 10, wpMode_callback);
     ros::Subscriber mode_sub = nh.subscribe("mode", 10 , mode_callback);
-    ros::Subscriber wpSet_sub = nh.subscribe("targetWp", 10, wayPoint_set_callback);
+    ros::Subscriber wpSet_sub = nh.subscribe("wayPoint/targetWp", 10, wayPoint_set_callback);
     //ros::Publisher mode_pub = nh.advertise<std_msgs::String>("mode_select/mode", 10);
     ros::Publisher lanePlanStop_pub = nh.advertise<std_msgs::Bool>("lane_planner/planning_stop", 10);
     ros::Publisher astarPlanStop_pub = nh.advertise<std_msgs::Bool>("astar_planning_node/planning_stop", 10);

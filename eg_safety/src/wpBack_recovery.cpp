@@ -24,9 +24,9 @@ void mode_callback(const std_msgs::String& mode_message)
     mode = mode_message;
 }
 
-std_msgs::Int32 now_wp;
-void now_wp_callback(const std_msgs::Int32& now_wp_){
-    now_wp=now_wp_;
+std_msgs::Int32 currentWp;
+void current_wp_callback(const std_msgs::Int32& currentWp_){
+    currentWp=currentWp_;
 }
 
 nav_msgs::Path path;
@@ -66,8 +66,8 @@ int main(int argc, char** argv)
     pnh.param<double>("fin_recovery_deviation", fin_recovery_deviation, 0.3);
 
     ros::Subscriber mode_sub = nh.subscribe("safety_limit/mode", 10, mode_callback);
-    ros::Subscriber now_wp_sub = nh.subscribe("waypoint/now", 50, now_wp_callback);
-    ros::Subscriber path_sub = nh.subscribe("path", 50, path_callback);
+    ros::Subscriber now_wp_sub = nh.subscribe("waypoint/currentWp", 50, current_wp_callback);
+    ros::Subscriber path_sub = nh.subscribe("wayPoint/path", 50, path_callback);
     ros::Publisher cmd_pub = nh.advertise<geometry_msgs::Twist>("recovery/cmd_vel", 10);
     ros::Publisher mode_pub = nh.advertise<std_msgs::String>("recovery/mode", 10);
 
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
             }else{
                 //select recovery way point
                 if(recoveryWpNum > 0){
-                    recoveryWpNum = now_wp.data - 1;
+                    recoveryWpNum = currentWp.data - 1;
                 }
                 //target_deviationになるよう target way pointの更新
                 while(!(poseStampDistance(path.poses[recoveryWpNum], nowPosition.getPoseStamped()) >= recovery_leastDistance))

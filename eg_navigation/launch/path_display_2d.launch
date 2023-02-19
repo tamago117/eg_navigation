@@ -7,7 +7,6 @@
     <node name="wpLoad" pkg="eg_wptool" type="wpLoad" output="screen">
         <param name="filePath" value="$(find eg_navigation)/csv/$(arg fileName)"/>
         <param name="map_frame_id" value="map"/>
-        <remap from="wayPoint/path" to="path"/>
     </node>
     <node pkg="map_server" type="map_server" name="map_server" args="$(arg mapFile)">
         <param name="frame_id" value="map"/>
