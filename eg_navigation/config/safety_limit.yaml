@@ -9,7 +9,8 @@ estimate_time : 1.5
 dt : 0.1
 max_linear_vel : 1.3
 max_angular_vel : 0.8
-recovery_start_time : 0.3
+recovery_start_time : 3
+continue_start_time : 1
 dangerous_cost : 3 #1~90
 dangerous_potential : true
 lowMode_speedRatio : 0.60

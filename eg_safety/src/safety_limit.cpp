@@ -64,6 +64,7 @@ private:
     float estimate_time;
     float dt;
     float recovery_start_time;
+    float continue_start_time;
 
     float lowMode_speedRatio;
     float dangerous_cost;
@@ -71,7 +72,8 @@ private:
     std::string map_id, base_link_id;
     float max_linear_vel, max_angular_vel;
 
-    int stop_count;
+    int stop_count = 0;
+    int continue_count = 0;
     std_msgs::String mode;
     std_msgs::Bool recovery_stop;
 
@@ -81,7 +83,7 @@ private:
     nav_msgs::OccupancyGrid costmap;
 };
 
-safety_limit::safety_limit() :  stop_count(0)
+safety_limit::safety_limit()
 {
     //publisher
     cmd_pub = nh.advertise<geometry_msgs::Twist>("safety_limit/cmd_vel_out", 10);
@@ -109,6 +111,7 @@ safety_limit::safety_limit() :  stop_count(0)
     pnh.param<float>("estimate_time", estimate_time, 0.3);
     pnh.param<float>("dt", dt, 0.1);
     pnh.param<float>("recovery_start_time", recovery_start_time, 2.0);
+    pnh.param<float>("continue_start_time", continue_start_time, 1.0);
     pnh.param<float>("lowMode_speedRatio", lowMode_speedRatio, 0.5);
     pnh.param<float>("dangerous_cost", dangerous_cost, 1);
     pnh.param<bool>("dangerous_potential", dangerous_potential, true);
@@ -221,6 +224,8 @@ void safety_limit::callback_knn(const sensor_msgs::PointCloud2ConstPtr& pc2){
 
                 //次点のロボットのエリアに点群が入るようならストップ
                 if(r < robotRadius){
+                    continue_count = continue_start_time*rate;
+
                     cmd_vel_limit.linear.x = 0;
                     cmd_vel_limit.angular.z = 0;
 
@@ -255,6 +260,12 @@ void safety_limit::callback_knn(const sensor_msgs::PointCloud2ConstPtr& pc2){
 
         //衝突判定に引っかからなければcountを初期化
         stop_count = 0;
+
+        if(continue_count > 0){
+            continue_count--;
+            return;
+        }
+
     }
 
     //potential check
